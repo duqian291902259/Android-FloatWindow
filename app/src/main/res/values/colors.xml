@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!--悬浮窗-->
+    <color name="float_window_bg_border_normal">#bcbcbc</color>
+    <color name="float_window_bg_border_edit">#4f95ff</color>
+</resources>
