@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 
@@ -25,7 +24,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initData() {
         floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
-        Toast.makeText(mContext, "FLOAT_WINDOW_TYPE_ROOT_VIEW ", Toast.LENGTH_LONG).show();
+        //Toast.makeText(mContext, "FLOAT_WINDOW_TYPE_ROOT_VIEW ", Toast.LENGTH_LONG).show();
     }
 
     @Override
