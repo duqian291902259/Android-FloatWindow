@@ -1,12 +1,14 @@
 package site.duqian.floatwindow;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -168,5 +170,24 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void onFloatWindowClick() {
         Toast.makeText(mContext, "FloatWindow clicked", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * 获取标题栏高度-方法1
+     * 标题栏高度 = View绘制区顶端位置 - 应用区顶端位置(也可以是状态栏高度，获取状态栏高度方法3中说过了)
+     */
+    public int getActionBarHeight() {
+        int height = 0;
+        //应用区域
+        Rect outRect1 = new Rect();
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect1);
+
+        //View绘制区域
+        Rect outRect2 = new Rect();
+        int viewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
+
+        height = viewTop - outRect1.top;
+        Log.e("duqian", "标题栏高度：" + height);
+        return height;
     }
 }

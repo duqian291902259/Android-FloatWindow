@@ -22,6 +22,13 @@
 
 
             <ImageView
+                android:id="@+id/iv_live_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/myphoto"/>
+
+            <ImageView
                 android:id="@+id/iv_close_window"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -35,12 +42,6 @@
                 android:src="@mipmap/nn_paster_btn_close"
                 />
 
-            <ImageView
-                android:id="@+id/iv_live_cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@mipmap/myphoto"
-                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/tv_player_status"

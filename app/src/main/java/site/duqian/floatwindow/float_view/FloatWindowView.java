@@ -76,8 +76,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         iv_zoom_btn.setOnTouchListener(onZoomBtnTouchListener);
         content_wrap.setOnTouchListener(onMovingTouchListener);
 
-        ImageView iv_close_window = (ImageView) floatView.findViewById(R.id.iv_close_window);
-        iv_close_window.setOnClickListener(new OnClickListener() {
+        floatView.findViewById(R.id.iv_close_window).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
@@ -96,17 +95,15 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         context = getContext();
         mWindowManager = SystemUtils.getWindowManager(context);
         statusBarHeight = params.statusBarHeight;
-        if (params != null) {
-            screenWidth = params.screenWidth;
-            screenHeight = params.screenHeight - statusBarHeight;//要去掉状态栏高度
-            videoViewMargin = params.videoViewMargin;
-            mMaxWidth = params.mMaxWidth;
-            mMinWidth = params.mMinWidth;
-            mRatio = params.mRatio;
-            //起点
-            startX = params.x;
-            startY = params.y;
-        }
+        screenWidth = params.screenWidth;
+        screenHeight = params.screenHeight - statusBarHeight;//要去掉状态栏高度
+        videoViewMargin = params.videoViewMargin;
+        mMaxWidth = params.mMaxWidth;
+        mMinWidth = params.mMinWidth;
+        mRatio = params.mRatio;
+        //起点
+        startX = params.x;
+        startY = params.y;
         isSdkGt23 = Build.VERSION.SDK_INT >= 23;
     }
 

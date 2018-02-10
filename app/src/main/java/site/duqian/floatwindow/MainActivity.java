@@ -24,7 +24,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initData() {
         floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
-        //Toast.makeText(mContext, "FLOAT_WINDOW_TYPE_ROOT_VIEW ", Toast.LENGTH_LONG).show();
+        //floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG;
     }
 
     @Override

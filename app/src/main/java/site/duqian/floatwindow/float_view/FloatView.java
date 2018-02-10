@@ -4,7 +4,7 @@ package site.duqian.floatwindow.float_view;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +40,6 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     private FloatViewParams params = null;
     private FloatViewListener listener;
-    private int statusBarHeight = 0;
     private int screenWidth;
     private int screenHeight;
     private int mMinWidth;//初始宽度
@@ -78,8 +77,7 @@ public class FloatView extends FrameLayout implements IFloatView {
         content_wrap.setOnTouchListener(onMovingTouchListener);
         content_wrap.addOnLayoutChangeListener(onLayoutChangeListener);
 
-        ImageView iv_close_window = (ImageView) floatView.findViewById(R.id.iv_close_window);
-        iv_close_window.setOnClickListener(new OnClickListener() {
+        floatView.findViewById(R.id.iv_close_window).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != FloatView.this.listener) {
@@ -97,15 +95,13 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     private void initData() {
         context = getContext();
-        statusBarHeight = params.statusBarHeight;
-        if (params != null) {
-            screenWidth = params.screenWidth;
-            screenHeight = params.screenHeight - statusBarHeight;//要去掉状态栏高度
-            videoViewMargin = params.videoViewMargin;
-            mMaxWidth = params.mMaxWidth;
-            mMinWidth = params.mMinWidth;
-            mRatio = params.mRatio;
-        }
+        screenWidth = params.screenWidth;
+        screenHeight = params.screenHeight;
+        videoViewMargin = params.videoViewMargin;
+        mMaxWidth = params.mMaxWidth;
+        mMinWidth = params.mMinWidth;
+        mRatio = params.mRatio;
+
         oldX = params.x;
         oldY = params.y;
         mRight = params.x + params.width;
@@ -149,11 +145,11 @@ public class FloatView extends FrameLayout implements IFloatView {
                 int t = mBottom - height;
                 int r = mRight;
                 int b = mBottom;
-                if (l < -videoViewMargin) {//0
+                if (l < -videoViewMargin) {
                     l = -videoViewMargin;
                     r = l + width;
                 }
-                if (t < -videoViewMargin) {//0
+                if (t < -videoViewMargin) {
                     t = -videoViewMargin;
                     b = t + height;
                 }
@@ -363,7 +359,7 @@ public class FloatView extends FrameLayout implements IFloatView {
         if (x >= dWidth) {
             x = dWidth - 1;
         }
-        //Log.d(TAG, "dq updateViewPosition x=" + x + ",y=" + y);
+        Log.d(TAG, "dq updateViewPosition x=" + x + ",y=" + y);
         reLayoutContentView(x, y);
     }
 
@@ -403,22 +399,6 @@ public class FloatView extends FrameLayout implements IFloatView {
         isEdit = false;
         iv_zoom_btn.setVisibility(GONE);
         videoViewWrap.setBackgroundColor(getResources().getColor(R.color.float_window_bg_border_normal));
-    }
-
-    /**
-     * 处理缩放按钮隐藏时视频的margin
-     */
-    private void handleMarginStatus() {
-        boolean isLeft = params.x <= -videoViewMargin;
-        boolean isTop = params.y <= -videoViewMargin;
-        // 贴边时设置视频margin
-        if (isLeft && isTop) {
-            updateVideoMargin(0, 0, videoViewMargin, videoViewMargin);
-        } else if (isLeft) {
-            updateVideoMargin(0, videoViewMargin, videoViewMargin, 0);
-        } else if (isTop) {
-            updateVideoMargin(videoViewMargin, 0, 0, videoViewMargin);
-        }
     }
 
     /**
@@ -472,26 +452,6 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     private void removeDelayCallBacks() {
         removeCallbacks(dispalyZoomBtnRunnable);
-    }
-
-    private void setErrorMessage(int strId) {
-        if (strId <= 0) {
-            return;
-        }
-        String errorMsg = context.getResources().getString(strId);
-        setErrorMessage(errorMsg);
-    }
-
-    public void setErrorMessage(String textMessage) {
-        if (TextUtils.isEmpty(textMessage)) {
-            tv_player_status.setText("");
-            tv_player_status.setVisibility(GONE);
-            iv_live_cover.setVisibility(GONE);
-        } else {
-            tv_player_status.setText(textMessage);
-            tv_player_status.setVisibility(VISIBLE);
-            iv_live_cover.setVisibility(VISIBLE);
-        }
     }
 
 }

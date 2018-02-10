@@ -34,11 +34,11 @@ public class PositionWrapper {
 
 
     public int getWidth() {
-        return 360;
+        return 640;
     }
 
     public int getHeight() {
-        return 640;
+        return 960;
     }
 
 }

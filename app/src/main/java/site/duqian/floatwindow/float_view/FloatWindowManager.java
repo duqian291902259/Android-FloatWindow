@@ -28,6 +28,7 @@ public class FloatWindowManager {
     private WindowManager windowManager;
     private PositionWrapper livePlayerWrapper;
     private BaseActivity activity;
+    private int actionBarHeight = 0;
 
     public FloatWindowManager() {
         livePlayerWrapper = PositionWrapper.getInstance();
@@ -40,6 +41,7 @@ public class FloatWindowManager {
         if (baseActivity == null) {
             return;
         }
+        actionBarHeight = baseActivity.getActionBarHeight();
         float_window_type = floatWindowType;
         Context context = baseActivity.getApplicationContext();
         activity = baseActivity;
@@ -50,7 +52,6 @@ public class FloatWindowManager {
         } catch (Exception e) {
             e.printStackTrace();
             isFloatWindowShowing = false;
-            return;
         }
     }
 
@@ -105,7 +106,7 @@ public class FloatWindowManager {
             wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }
 
-        wmParams.format = PixelFormat.RGBA_8888;//透明
+        wmParams.format = PixelFormat.RGBA_8888;
         wmParams.gravity = Gravity.START | Gravity.TOP;
 
         wmParams.width = floatViewParams.width;
@@ -133,11 +134,13 @@ public class FloatWindowManager {
         if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
             marginBottom += statusBarHeight;
         }
-        int winWidth = 540;
-        int winHeight = 960;
+        //设置窗口大小，已view、视频大小做调整
+        int winWidth = PositionWrapper.getInstance().getWidth();
+        int winHeight = PositionWrapper.getInstance().getHeight();
         int margin = SystemUtils.dip2px(context, 15);
         int width = 0;
-        if (winWidth <= winHeight) {//竖屏比例
+        if (winWidth <= winHeight) {
+            //竖屏比例
             width = (int) (screenWidth * 1.0f * 220 / 750) + margin;
         } else {//横屏比例
             width = (int) (screenWidth * 1.0f / 3) + margin;
@@ -163,6 +166,9 @@ public class FloatWindowManager {
 
         params.screenWidth = screenWidth;
         params.screenHeight = screenHeight;
+        if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
+            params.screenHeight = screenHeight - statusBarHeight - actionBarHeight;
+        }
         params.videoViewMargin = margin;
         params.mMaxWidth = screenWidth / 2 + margin;
         params.mMinWidth = width;
@@ -182,17 +188,22 @@ public class FloatWindowManager {
             return;
         }
         isFloatWindowShowing = false;
-
         if (floatView != null) {
             FloatViewParams floatViewParams = floatView.getParams();
             livePlayerWrapper.setLastParams(floatViewParams);
         }
-        if (windowManager != null && floatView != null) {
-            windowManager.removeViewImmediate((View) floatView);
+        try {
+            if (windowManager != null && floatView != null) {
+                windowManager.removeViewImmediate((View) floatView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if (contentView != null && floatView != null) {
             contentView.removeView((View) floatView);
         }
         floatView = null;
+        windowManager = null;
+        contentView = null;
     }
 }
