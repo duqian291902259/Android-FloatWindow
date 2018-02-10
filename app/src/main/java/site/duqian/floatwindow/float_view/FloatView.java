@@ -31,7 +31,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     private float yInScreen;
     private float xDownInScreen;
     private float yDownInScreen;
-    private Context context;
+    private Context mContext;
     private TextView tv_player_status;
     private RelativeLayout videoViewWrap;
     private RelativeLayout content_wrap;
@@ -48,13 +48,13 @@ public class FloatView extends FrameLayout implements IFloatView {
     private int videoViewMargin;
     private View floatView;
 
-    public FloatView(Context context) {
-        super(context);
+    public FloatView(Context mContext) {
+        super(mContext);
         init();
     }
 
-    public FloatView(@NonNull Context context, FloatViewParams params) {
-        super(context);
+    public FloatView(@NonNull Context mContext, FloatViewParams params) {
+        super(mContext);
         this.params = params;
         init();
     }
@@ -94,7 +94,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     }
 
     private void initData() {
-        context = getContext();
+        mContext = getContext();
         screenWidth = params.screenWidth;
         screenHeight = params.screenHeight;
         videoViewMargin = params.videoViewMargin;
@@ -327,7 +327,7 @@ public class FloatView extends FrameLayout implements IFloatView {
      * @return
      */
     private boolean isClickedEvent() {
-        int scaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();// - 10;
+        int scaledTouchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();// - 10;
         if (Math.abs(xDownInScreen - xInScreen) <= scaledTouchSlop
                 && Math.abs(yDownInScreen - yInScreen) <= scaledTouchSlop) {
             return true;

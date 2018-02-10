@@ -43,12 +43,12 @@ public class FloatWindowManager {
         }
         actionBarHeight = baseActivity.getActionBarHeight();
         float_window_type = floatWindowType;
-        Context context = baseActivity.getApplicationContext();
+        Context mContext = baseActivity.getApplicationContext();
         activity = baseActivity;
 
         try {
             isFloatWindowShowing = true;
-            initFloatWindow(context);
+            initFloatWindow(mContext);
         } catch (Exception e) {
             e.printStackTrace();
             isFloatWindowShowing = false;
@@ -58,15 +58,15 @@ public class FloatWindowManager {
     /**
      * 初始化悬浮窗
      */
-    private void initFloatWindow(final Context context) {
-        if (context == null) {
+    private void initFloatWindow(final Context mContext) {
+        if (mContext == null) {
             return;
         }
-        floatViewParams = initFloatViewParams(context);
+        floatViewParams = initFloatViewParams(mContext);
         if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
-            initCommonFloatView(context);
+            initCommonFloatView(mContext);
         } else {
-            initSystemWindow(context);
+            initSystemWindow(mContext);
         }
         isFloatWindowShowing = true;
     }
@@ -74,10 +74,10 @@ public class FloatWindowManager {
     /**
      * 直接在activity根布局添加悬浮窗
      *
-     * @param context
+     * @param mContext
      */
-    private void initCommonFloatView(Context context) {
-        floatView = new FloatView(context, floatViewParams);
+    private void initCommonFloatView(Context mContext) {
+        floatView = new FloatView(mContext, floatViewParams);
         View rootView = activity.getWindow().getDecorView().getRootView();
         contentView = (FrameLayout) rootView.findViewById(android.R.id.content);
         contentView.addView((View) floatView);
@@ -86,12 +86,12 @@ public class FloatWindowManager {
     /**
      * 利用系统弹窗实现悬浮窗
      *
-     * @param context
+     * @param mContext
      */
-    private void initSystemWindow(Context context) {
-        windowManager = SystemUtils.getWindowManager(context);
+    private void initSystemWindow(Context mContext) {
+        windowManager = SystemUtils.getWindowManager(mContext);
         WindowManager.LayoutParams wmParams = new WindowManager.LayoutParams();
-        wmParams.packageName = context.getPackageName();
+        wmParams.packageName = mContext.getPackageName();
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
@@ -114,30 +114,30 @@ public class FloatWindowManager {
         wmParams.x = floatViewParams.x;
         wmParams.y = floatViewParams.y;
 
-        floatView = new FloatWindowView(context, floatViewParams, wmParams);
+        floatView = new FloatWindowView(mContext, floatViewParams, wmParams);
         windowManager.addView((View) floatView, wmParams);
     }
 
     /**
      * 初始化窗口参数
      *
-     * @param context
+     * @param mContext
      * @return
      */
-    private FloatViewParams initFloatViewParams(Context context) {
+    private FloatViewParams initFloatViewParams(Context mContext) {
         FloatViewParams params = new FloatViewParams();
-        int screenWidth = SystemUtils.getScreenWidth(context);
-        int screenHeight = SystemUtils.getScreenHeight(context, false);
-        int statusBarHeight = SystemUtils.getStatusBarHeight(context);
+        int screenWidth = SystemUtils.getScreenWidth(mContext);
+        int screenHeight = SystemUtils.getScreenHeight(mContext, false);
+        int statusBarHeight = SystemUtils.getStatusBarHeight(mContext);
         //根据播放器实际宽高和设计稿尺寸比例适应。191 340 114
-        int marginBottom = SystemUtils.dip2px(context, 150);
+        int marginBottom = SystemUtils.dip2px(mContext, 150);
         if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
             marginBottom += statusBarHeight;
         }
         //设置窗口大小，已view、视频大小做调整
         int winWidth = PositionWrapper.getInstance().getWidth();
         int winHeight = PositionWrapper.getInstance().getHeight();
-        int margin = SystemUtils.dip2px(context, 15);
+        int margin = SystemUtils.dip2px(mContext, 15);
         int width = 0;
         if (winWidth <= winHeight) {
             //竖屏比例

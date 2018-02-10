@@ -21,8 +21,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SubActivity"
+            android:name=".activity.SubActivity"
             android:label="@string/title_activity_sub">
+        </activity>
+        <activity android:name=".activity.SubBActivity">
         </activity>
     </application>
 

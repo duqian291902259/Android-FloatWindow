@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import site.duqian.floatwindow.activity.SubActivity;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 
 public class MainActivity extends BaseActivity {
@@ -58,12 +59,14 @@ public class MainActivity extends BaseActivity {
                     showFloatWindowDelay();
                     return true;
                 case R.id.navigation_B:
-                    //floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG;
+                    floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG;
                     mTextMessage.setText("window Manager实现，无需权限，待完善");
+                    showFloatWindow();
                     return true;
                 case R.id.navigation_C:
-                    //floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW;
+                    floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW;
                     mTextMessage.setText("window Manager实现，需权限，待完善");
+                    checkPermissionAndShow();
                     return true;
                 default:
                     break;

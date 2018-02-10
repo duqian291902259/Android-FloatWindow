@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <TextView
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center"
-        android:text="继续显示弹窗，并保留上个页面的位置"
+        android:text="系统弹窗需要开启悬浮窗权限，如果没有开启，点击开启"
         />
 
-    <Button
-        android:id="@+id/btn_open"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="30dp"
-        android:text="打开全局系统弹窗"/>
+
 </RelativeLayout>

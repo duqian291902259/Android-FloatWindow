@@ -1,9 +1,11 @@
 package site.duqian.floatwindow;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.linchaolong.android.floatingpermissioncompat.FloatingPermissionCompat;
 
 import site.duqian.floatwindow.float_view.FloatViewListener;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
@@ -190,4 +194,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.e("duqian", "标题栏高度：" + height);
         return height;
     }
+
+    protected void checkPermissionAndShow() {
+        // 检查是否已经授权
+        if (FloatingPermissionCompat.get().check(mContext)) {
+            showFloatWindow();
+        } else {
+            // 授权提示
+            new AlertDialog.Builder(mContext).setTitle("悬浮窗权限未开启")
+                    .setMessage("你的手机没有授权" + mContext.getString(R.string.app_name) + "获得悬浮窗权限，视频悬浮窗功能将无法正常使用")
+                    .setPositiveButton("开启", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // 显示授权界面
+                            FloatingPermissionCompat.get().apply(mContext);
+                        }
+                    })
+                    .setNegativeButton("取消", null).show();
+        }
+    }
+
 }

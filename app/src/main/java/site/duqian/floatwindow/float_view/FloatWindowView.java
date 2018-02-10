@@ -31,7 +31,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     private float yInScreen;
     private float xDownInScreen;
     private float yDownInScreen;
-    private Context context;
+    private Context mContext;
     private TextView tv_player_status;
     private RelativeLayout videoViewWrap;
     private RelativeLayout content_wrap;
@@ -52,8 +52,8 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     private boolean isSdkGt23 = false;//sdk版本是否>=23
 
 
-    public FloatWindowView(Context context, FloatViewParams floatViewParams, WindowManager.LayoutParams wmParams) {
-        super(context);
+    public FloatWindowView(Context mContext, FloatViewParams floatViewParams, WindowManager.LayoutParams wmParams) {
+        super(mContext);
         this.params = floatViewParams;
         this.mWindowParams = wmParams;
         init();
@@ -92,8 +92,8 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     }
 
     private void initData() {
-        context = getContext();
-        mWindowManager = SystemUtils.getWindowManager(context);
+        mContext = getContext();
+        mWindowManager = SystemUtils.getWindowManager(mContext);
         statusBarHeight = params.statusBarHeight;
         screenWidth = params.screenWidth;
         screenHeight = params.screenHeight - statusBarHeight;//要去掉状态栏高度
@@ -380,7 +380,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     }
 
     private boolean isClickedEvent() {
-        int scaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        int scaledTouchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();
         if (Math.abs(xDownInScreen - xInScreen) <= scaledTouchSlop
                 && Math.abs(yDownInScreen - yInScreen) <= scaledTouchSlop) {
             // 是点击事件
@@ -527,7 +527,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         if (strId <= 0) {
             return;
         }
-        String errorMsg = context.getResources().getString(strId);
+        String errorMsg = mContext.getResources().getString(strId);
         setErrorMessage(errorMsg);
     }
 
