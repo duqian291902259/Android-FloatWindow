@@ -50,7 +50,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="这里是视频或者其他内容"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
                 android:textSize="14dp"
                 android:textStyle="bold"/>
         </RelativeLayout>

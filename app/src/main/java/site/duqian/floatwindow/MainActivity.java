@@ -1,5 +1,6 @@
 package site.duqian.floatwindow;
 
+import android.Manifest;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import site.duqian.floatwindow.activity.SubActivity;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
@@ -51,29 +53,43 @@ public class MainActivity extends BaseActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             int itemId = item.getItemId();
             Log.d("dq", "id=" + itemId);
-            closeFloatWindow();
+            //closeFloatWindow();
             switch (itemId) {
                 case R.id.navigation_A:
                     mTextMessage.setText(R.string.title_home);
                     floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
                     showFloatWindowDelay();
-                    return true;
+                    break;
                 case R.id.navigation_B:
                     floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG;
                     mTextMessage.setText("window Manager实现，无需权限，待完善");
-                    showFloatWindow();
-                    return true;
+                    showFloatWindowDelay();
+                    break;
                 case R.id.navigation_C:
                     floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW;
                     mTextMessage.setText("window Manager实现，需权限，待完善");
                     checkPermissionAndShow();
-                    return true;
+                    break;
                 default:
                     break;
             }
 
-            return false;
+            return true;
         }
     };
+
+    private void requestPermission() {
+        requestPermissions(mContext, new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW}, new RequestPermissionCallBack() {
+            @Override
+            public void granted() {
+                showFloatWindowDelay();
+            }
+
+            @Override
+            public void denied() {
+                Toast.makeText(mContext, "悬浮窗权限获取失败，正常功能受到影响", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
 }

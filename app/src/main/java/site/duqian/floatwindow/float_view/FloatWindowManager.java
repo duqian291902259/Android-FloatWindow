@@ -52,6 +52,9 @@ public class FloatWindowManager {
         } catch (Exception e) {
             e.printStackTrace();
             isFloatWindowShowing = false;
+            /*android.view.WindowManager$BadTokenException:
+             Unable to add window android.view.ViewRootImpl$W@123e0ab --
+             permission denied for this window 2003*/
         }
     }
 
