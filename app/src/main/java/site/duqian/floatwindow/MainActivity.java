@@ -53,21 +53,21 @@ public class MainActivity extends BaseActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             int itemId = item.getItemId();
             Log.d("dq", "id=" + itemId);
-            //closeFloatWindow();
+            closeFloatWindow();
             switch (itemId) {
                 case R.id.navigation_A:
-                    mTextMessage.setText(R.string.title_home);
+                    mTextMessage.setText("应用内悬浮窗，只能在父view中移动和缩放");
                     floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
                     showFloatWindowDelay();
                     break;
                 case R.id.navigation_B:
                     floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG;
-                    mTextMessage.setText("window Manager实现，无需权限，待完善");
-                    showFloatWindowDelay();
+                    mTextMessage.setText("WM实现，无需权限，待完善");
+                    showFloatWindow();
                     break;
                 case R.id.navigation_C:
                     floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW;
-                    mTextMessage.setText("window Manager实现，需权限，待完善");
+                    mTextMessage.setText("window Manager实现，需权限，退出应用也可以桌面显示，待完善");
                     checkPermissionAndShow();
                     break;
                 default:

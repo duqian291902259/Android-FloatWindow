@@ -1,8 +1,6 @@
 package site.duqian.floatwindow.float_view;
 
 import android.content.Context;
-import android.os.Build;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,10 +30,9 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     private float xDownInScreen;
     private float yDownInScreen;
     private Context mContext;
-    private TextView tv_player_status;
+    private TextView tv_info;
     private RelativeLayout videoViewWrap;
     private RelativeLayout content_wrap;
-    private ImageView iv_live_cover;
     private ImageView iv_zoom_btn;
 
     private WindowManager mWindowManager = null;
@@ -69,8 +66,8 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         View floatView = inflater.inflate(R.layout.view_float_window, null);
         content_wrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
-        tv_player_status = (TextView) floatView.findViewById(R.id.tv_player_status);
-        iv_live_cover = (ImageView) floatView.findViewById(R.id.iv_live_cover);
+        tv_info = (TextView) floatView.findViewById(R.id.tv_info);
+        tv_info.setText("System Window");
         iv_zoom_btn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
 
         iv_zoom_btn.setOnTouchListener(onZoomBtnTouchListener);
@@ -104,7 +101,8 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         //起点
         startX = params.x;
         startY = params.y;
-        isSdkGt23 = Build.VERSION.SDK_INT >= 23;
+        //isSdkGt23 = Build.VERSION.SDK_INT >= 23;
+        // >=23的部分手机缩放会卡顿，系统弹窗更新位置迟缓不够平滑
     }
 
     private void updateViewLayoutParams(int width, int height) {
@@ -450,7 +448,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     }
 
     private void showZoomView() {
-        if (!isEdit && isSdkGt23) {//只有6.0及以上才显示缩放按钮
+        if (!isEdit ) {//&& isSdkGt23 只有6.0及以上才显示缩放按钮
             updateVideoMargin(videoViewMargin, videoViewMargin, 0, 0);
             iv_zoom_btn.setVisibility(VISIBLE);
             videoViewWrap.setBackgroundColor(getResources().getColor(R.color.float_window_bg_border_edit));
@@ -523,23 +521,4 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         removeCallbacks(dispalyZoomBtnRunnable);
     }
 
-    private void setErrorMessage(int strId) {
-        if (strId <= 0) {
-            return;
-        }
-        String errorMsg = mContext.getResources().getString(strId);
-        setErrorMessage(errorMsg);
-    }
-
-    public void setErrorMessage(String textMessage) {
-        if (TextUtils.isEmpty(textMessage)) {
-            tv_player_status.setText("");
-            tv_player_status.setVisibility(GONE);
-            iv_live_cover.setVisibility(GONE);
-        } else {
-            tv_player_status.setText(textMessage);
-            tv_player_status.setVisibility(VISIBLE);
-            iv_live_cover.setVisibility(VISIBLE);
-        }
-    }
 }

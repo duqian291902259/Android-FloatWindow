@@ -12,6 +12,7 @@ import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import site.duqian.floatwindow.R;
 
@@ -67,7 +68,8 @@ public class FloatView extends FrameLayout implements IFloatView {
         content_wrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
         iv_zoom_btn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
-
+        TextView tv_info = (TextView) floatView.findViewById(R.id.tv_info);
+        tv_info.setText("view内部悬浮窗");
         iv_zoom_btn.setOnTouchListener(onZoomBtnTouchListener);
         content_wrap.setOnTouchListener(onMovingTouchListener);
         content_wrap.addOnLayoutChangeListener(onLayoutChangeListener);
