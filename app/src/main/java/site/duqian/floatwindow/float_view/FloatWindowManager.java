@@ -133,7 +133,7 @@ public class FloatWindowManager {
         int screenWidth = SystemUtils.getScreenWidth(mContext);
         int screenHeight = SystemUtils.getScreenHeight(mContext, false);
         int statusBarHeight = SystemUtils.getStatusBarHeight(mContext);
-        //根据播放器实际宽高和设计稿尺寸比例适应。191 340 114
+        //根据实际宽高和设计稿尺寸比例适应。
         int marginBottom = SystemUtils.dip2px(mContext, 150);
         if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
             marginBottom += statusBarHeight;

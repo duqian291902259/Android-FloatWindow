@@ -4,7 +4,7 @@
     <item
         android:id="@+id/navigation_A"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home"/>
+        android:title="@string/title_app_float_view"/>
 
     <item
         android:id="@+id/navigation_B"
@@ -14,6 +14,6 @@
     <item
         android:id="@+id/navigation_C"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_alert"/>
+        android:title="@string/title_alert_window"/>
 
 </menu>

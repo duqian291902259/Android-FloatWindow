@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FloatWindow</string>
-    <string name="title_home">应用内悬浮窗</string>
+    <string name="title_app_float_view">应用内悬浮窗(无需权限)</string>
     <string name="title_dialog">弹窗(无需权限)</string>
-    <string name="title_alert">系统弹窗(需权限)</string>
+    <string name="title_alert_window">系统弹窗(需权限)</string>
     <string name="title_activity_sub">SubActivity</string>
 </resources>

@@ -67,7 +67,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         content_wrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
         tv_info = (TextView) floatView.findViewById(R.id.tv_info);
-        tv_info.setText("System Window");
+        tv_info.setText(getResources().getString(R.string.title_alert_window));
         iv_zoom_btn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
 
         iv_zoom_btn.setOnTouchListener(onZoomBtnTouchListener);

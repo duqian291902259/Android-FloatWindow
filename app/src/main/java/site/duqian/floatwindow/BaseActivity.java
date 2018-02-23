@@ -101,9 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (floatWindowType != FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
-            closeFloatWindow();
-        }
+        destroyWindow();
     }
 
     /*---------------------------float window start---------------------------*/
@@ -232,6 +230,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        destroyWindow();
+    }
+
+    private void destroyWindow() {
+        if (floatWindowType!= FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
+            closeFloatWindow();
+        }
+    }
+
     private final int mRequestCode = 1024;
     private RequestPermissionCallBack mRequestPermissionCallBack;
 
@@ -324,7 +335,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             //"【用户曾经拒绝过你的请求，所以这次发起请求时解释一下】" +
                             .setMessage(
                                     "您好，需要如下权限：" + permissionNames +
-                                            " 请允许，否则将影响部分功能的正常使用。")//设置显示的内容
+                                            " 请允许，否则将影响xit功能的正常使用。")//设置显示的内容
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加确定按钮
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
@@ -346,7 +357,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 权限请求结果回调接口
      */
-    interface RequestPermissionCallBack {
+    public interface RequestPermissionCallBack {
         /**
          * 同意授权
          */

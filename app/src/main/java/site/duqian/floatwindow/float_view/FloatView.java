@@ -69,7 +69,7 @@ public class FloatView extends FrameLayout implements IFloatView {
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
         iv_zoom_btn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
         TextView tv_info = (TextView) floatView.findViewById(R.id.tv_info);
-        tv_info.setText("view内部悬浮窗");
+        tv_info.setText(getResources().getString(R.string.title_app_float_view));
         iv_zoom_btn.setOnTouchListener(onZoomBtnTouchListener);
         content_wrap.setOnTouchListener(onMovingTouchListener);
         content_wrap.addOnLayoutChangeListener(onLayoutChangeListener);
