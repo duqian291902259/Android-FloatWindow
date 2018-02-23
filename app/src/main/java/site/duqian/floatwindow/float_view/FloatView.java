@@ -12,7 +12,6 @@ import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import site.duqian.floatwindow.R;
 
@@ -32,10 +31,8 @@ public class FloatView extends FrameLayout implements IFloatView {
     private float xDownInScreen;
     private float yDownInScreen;
     private Context mContext;
-    private TextView tv_player_status;
     private RelativeLayout videoViewWrap;
     private RelativeLayout content_wrap;
-    private ImageView iv_live_cover;
     private ImageView iv_zoom_btn;
 
     private FloatViewParams params = null;
@@ -69,8 +66,6 @@ public class FloatView extends FrameLayout implements IFloatView {
         floatView = inflater.inflate(R.layout.view_float_window, null);
         content_wrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
-        tv_player_status = (TextView) floatView.findViewById(R.id.tv_player_status);
-        iv_live_cover = (ImageView) floatView.findViewById(R.id.iv_live_cover);
         iv_zoom_btn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
 
         iv_zoom_btn.setOnTouchListener(onZoomBtnTouchListener);
@@ -95,9 +90,9 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     private void initData() {
         mContext = getContext();
+        videoViewMargin = params.videoViewMargin;
         screenWidth = params.screenWidth;
         screenHeight = params.screenHeight;
-        videoViewMargin = params.videoViewMargin;
         mMaxWidth = params.mMaxWidth;
         mMinWidth = params.mMinWidth;
         mRatio = params.mRatio;

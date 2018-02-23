@@ -34,6 +34,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        if (!isShowTitle()) {
+            //隐藏标题栏
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            //隐藏状态栏
+            // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         int layoutId = getLayoutResId();
         if (layoutId > 0) {
             rootView = LayoutInflater.from(mContext).inflate(layoutId, null);
@@ -66,6 +72,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected boolean isShowFloatWindow() {
         return true;
+    }
+
+    protected boolean isShowTitle() {
+        return false;
     }
 
     @Override

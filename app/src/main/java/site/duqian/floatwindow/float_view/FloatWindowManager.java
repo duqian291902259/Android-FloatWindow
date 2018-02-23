@@ -167,7 +167,7 @@ public class FloatWindowManager {
         params.screenWidth = screenWidth;
         params.screenHeight = screenHeight;
         if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
-            params.screenHeight = screenHeight - statusBarHeight - actionBarHeight;
+            params.screenHeight = screenHeight - statusBarHeight;// - actionBarHeight;
         }
         params.videoViewMargin = margin;
         params.mMaxWidth = screenWidth / 2 + margin;
