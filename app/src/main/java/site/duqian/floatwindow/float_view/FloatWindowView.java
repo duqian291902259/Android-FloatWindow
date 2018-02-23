@@ -516,6 +516,14 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         this.listener = listener;
     }
 
+    public void setWindowType(int float_window_type) {
+        if (float_window_type == FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG) {
+            tv_info.setText(getResources().getString(R.string.title_float_window_dialog));
+        } else if (float_window_type == FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
+            tv_info.setText(getResources().getString(R.string.title_alert_window));
+        }
+    }
+
 
     private void removeDelayCallBacks() {
         removeCallbacks(dispalyZoomBtnRunnable);

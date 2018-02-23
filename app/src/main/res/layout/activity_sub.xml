@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center"
-        android:text="继续显示弹窗，并保留上个页面的位置"
+        android:text="@string/sub_content_tips"
         />
 
     <Button
@@ -19,5 +19,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="30dp"
-        android:text="打开全局系统弹窗"/>
+        android:text="@string/btn_txt_open_sys_win"/>
 </RelativeLayout>

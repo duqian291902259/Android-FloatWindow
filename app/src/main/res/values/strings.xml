@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">FloatWindow</string>
-    <string name="title_app_float_view">应用内悬浮窗(无需权限)</string>
-    <string name="title_dialog">弹窗(无需权限)</string>
+    <string name="title_app_float_view">内部悬浮窗(推荐)</string>
+    <string name="title_float_window_dialog">WM弹窗(无需权限)</string>
     <string name="title_alert_window">系统弹窗(需权限)</string>
+    <string name="sub_content_tips">继续显示内部弹窗，并保留上个页面的位置</string>
+    <string name="btn_txt_open_sys_win">打开WM系统弹窗</string>
+    <string name="content_tips">这里是视频或者其他内容</string>
+    <string name="btn_txt_open">打开新页面</string>
+    <string name="system_win_message">系统弹窗形式显示悬浮窗，可以退出应用在桌面显示，需要开启悬浮窗权限，如果没有开启，点击开启</string>
     <string name="title_activity_sub">SubActivity</string>
 </resources>

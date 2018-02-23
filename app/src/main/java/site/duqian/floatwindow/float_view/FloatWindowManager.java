@@ -120,6 +120,8 @@ public class FloatWindowManager {
 
         floatView = new FloatWindowView(mContext, floatViewParams, wmParams);
         windowManager.addView((View) floatView, wmParams);
+
+        ((FloatWindowView)floatView).setWindowType(float_window_type);
     }
 
     /**

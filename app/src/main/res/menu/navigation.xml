@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_B"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dialog"/>
+        android:title="@string/title_float_window_dialog"/>
 
     <item
         android:id="@+id/navigation_C"
