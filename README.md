@@ -1,8 +1,13 @@
 ## About FloatWindow
 
-Android APP中实现悬浮窗的场景很多，比如悬浮窗播放视频，离开直播间，或者退出应用，继续播放直播流等。本项目在线上稳定运行，仅供参考，可根据自己的需求，改进，欢迎交流。
+Android APP中实现悬浮窗的场景很多，比如悬浮窗播放视频，离开直播间，或者退出应用，继续播放直播流等。
+本人研究并写了一套相对优雅的悬浮窗实现方案，缩放，移动，关闭，点击，自定义某个页面显示等。推荐采用内部view添加布局展示悬浮窗，此方案在线上稳定运行，无兼容性问题，可根据需要自行修改，欢迎交流。
 
 ![Android-FloatWindow](https://github.com/duqian291902259/Android-FloatWindow/blob/master/screenshot/float-window-no-permission-1.png)
+
+下载apk体验一下吧：
+
+[float-window-app-release.apk](https://github.com/duqian291902259/Android-FloatWindow/blob/master/release-app/float-window-app-release.apk)
 
 
 ## 悬浮窗的实现方式

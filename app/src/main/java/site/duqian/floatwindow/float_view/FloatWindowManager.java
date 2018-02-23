@@ -147,9 +147,9 @@ public class FloatWindowManager {
         int width = 0;
         if (winWidth <= winHeight) {
             //竖屏比例
-            width = (int) (screenWidth * 1.0f * 220 / 750) + margin;
+            width = (int) (screenWidth * 1.0f * 1 / 3) + margin;
         } else {//横屏比例
-            width = (int) (screenWidth * 1.0f / 3) + margin;
+            width = (int) (screenWidth * 1.0f / 2) + margin;
         }
         float ratio = 1.0f * winHeight / winWidth;
         int height = (int) (width * ratio);

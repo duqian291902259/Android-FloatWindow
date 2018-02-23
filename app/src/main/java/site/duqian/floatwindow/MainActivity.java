@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import site.duqian.floatwindow.activity.SubActivity;
+import site.duqian.floatwindow.activity.SubAActivity;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 import site.duqian.floatwindow.float_view.PositionWrapper;
 
@@ -39,7 +39,7 @@ public class MainActivity extends BaseActivity {
         mBtnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mContext, SubActivity.class));
+                startActivity(new Intent(mContext, SubAActivity.class));
             }
         });
     }
@@ -52,8 +52,9 @@ public class MainActivity extends BaseActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             int itemId = item.getItemId();
             Log.d("dq", "id=" + itemId);
-            PositionWrapper.getInstance().clear();
             closeFloatWindow();
+            PositionWrapper.getInstance().clear();
+
             switch (itemId) {
                 case R.id.navigation_A:
                     mTextMessage.setText("应用内悬浮窗，只能在父view中移动和缩放,不存在兼容性问题");

@@ -16,7 +16,7 @@ public class SubBActivity extends BaseActivity {
     @Override
     protected void initData() {
         floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW;
-        //requestPermission();
+        checkPermissionAndShow();
     }
 
     @Override
@@ -48,5 +48,11 @@ public class SubBActivity extends BaseActivity {
                 Toast.makeText(mContext, "悬浮窗权限获取失败，正常功能受到影响", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        closeFloatWindow();
     }
 }

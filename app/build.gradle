@@ -12,6 +12,7 @@ android {
             storePassword props['KEYSTORE_PASSWORD']
         }
     }
+
     compileSdkVersion 26
     defaultConfig {
         applicationId "site.duqian.floatwindow"
@@ -23,8 +24,14 @@ android {
     }
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }

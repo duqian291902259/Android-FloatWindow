@@ -7,6 +7,8 @@
     <string name="btn_txt_open_sys_win">打开WM系统弹窗</string>
     <string name="content_tips">这里是视频或者其他内容</string>
     <string name="btn_txt_open">打开新页面</string>
+    <string name="btn_txt_open_no_fw">打开新页面,不显示悬浮窗</string>
+    <string name="tips_no_float_window">控制某个页面是否显示悬浮窗，只需要重写基类中isShowFloatWindow()方法，该页面返回false，所以不显示</string>
     <string name="system_win_message">系统弹窗形式显示悬浮窗，可以退出应用在桌面显示，需要开启悬浮窗权限，如果没有开启，点击开启</string>
     <string name="title_activity_sub">SubActivity</string>
 </resources>

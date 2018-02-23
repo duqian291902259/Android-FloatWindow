@@ -8,7 +8,7 @@ import site.duqian.floatwindow.BaseActivity;
 import site.duqian.floatwindow.R;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 
-public class SubActivity extends BaseActivity {
+public class SubAActivity extends BaseActivity {
 
     private TextView mTextMessage;
 
@@ -24,6 +24,12 @@ public class SubActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(mContext, SubBActivity.class));
+            }
+        });
+        findViewById(R.id.btn_open_no_float_win).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, SubCActivity.class));
             }
         });
     }
