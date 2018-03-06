@@ -15,7 +15,7 @@ public class SubBActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW;
+        floatWindowType = FloatWindowManager.FW_TYPE_ALERT_WINDOW;
         checkPermissionAndShow();
     }
 

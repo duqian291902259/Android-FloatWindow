@@ -2,6 +2,7 @@ package site.duqian.floatwindow.float_view;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,9 +22,10 @@ import site.duqian.floatwindow.uitls.SystemUtils;
  */
 
 public class FloatWindowManager {
-    public static final int FLOAT_WINDOW_TYPE_ROOT_VIEW = 10;
-    public static final int FLOAT_WINDOW_TYPE_APP_DIALOG = 11;
-    public static final int FLOAT_WINDOW_TYPE_ALERT_WINDOW = 12;
+    public static final int FW_TYPE_ROOT_VIEW = 10;
+    public static final int FW_TYPE_APP_DIALOG = 11;
+    public static final int FW_TYPE_ALERT_WINDOW = 12;
+    public static final int FW_TYPE_APPLICATION_OVERLAY = 13;
     private int float_window_type = 0;
     private IFloatView floatView;
     private boolean isFloatWindowShowing = false;
@@ -71,7 +73,7 @@ public class FloatWindowManager {
             return;
         }
         floatViewParams = initFloatViewParams(mContext);
-        if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
+        if (float_window_type == FW_TYPE_ROOT_VIEW) {
             initCommonFloatView(mContext);
         } else {
             initSystemWindow(mContext);
@@ -114,12 +116,15 @@ public class FloatWindowManager {
                 | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
                 | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
-        if (float_window_type == FLOAT_WINDOW_TYPE_APP_DIALOG) {
+        if (float_window_type == FW_TYPE_APP_DIALOG) {
             //wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
             wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        } else if (float_window_type == FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
-            //需要权限
+        } else if (float_window_type == FW_TYPE_ALERT_WINDOW) {//需要权限
             wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        } else if (float_window_type == FW_TYPE_APPLICATION_OVERLAY) {
+            if (Build.VERSION.SDK_INT>=26) {
+                wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            }
         }
 
         wmParams.format = PixelFormat.RGBA_8888;
@@ -153,7 +158,7 @@ public class FloatWindowManager {
         int statusBarHeight = SystemUtils.getStatusBarHeight(mContext);
         //根据实际宽高和设计稿尺寸比例适应。
         int marginBottom = SystemUtils.dip2px(mContext, 150);
-        if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
+        if (float_window_type == FW_TYPE_ROOT_VIEW) {
             marginBottom += statusBarHeight;
         }
         //设置窗口大小，已view、视频大小做调整
@@ -188,7 +193,7 @@ public class FloatWindowManager {
 
         params.screenWidth = screenWidth;
         params.screenHeight = screenHeight;
-        if (float_window_type == FLOAT_WINDOW_TYPE_ROOT_VIEW) {
+        if (float_window_type == FW_TYPE_ROOT_VIEW) {
             params.screenHeight = screenHeight - statusBarHeight;// - actionBarHeight;
         }
         params.videoViewMargin = margin;

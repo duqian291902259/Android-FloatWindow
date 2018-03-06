@@ -1,6 +1,7 @@
 package site.duqian.floatwindow;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
@@ -25,8 +26,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
-        //floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_APP_DIALOG;
+        floatWindowType = FloatWindowManager.FW_TYPE_ROOT_VIEW;
+        //floatWindowType = FloatWindowManager.FW_TYPE_APP_DIALOG;
     }
 
     @Override
@@ -58,16 +59,20 @@ public class MainActivity extends BaseActivity {
             switch (itemId) {
                 case R.id.navigation_A:
                     mTextMessage.setText("应用内悬浮窗，只能在父view中移动和缩放,不存在兼容性问题");
-                    floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
+                    floatWindowType = FloatWindowManager.FW_TYPE_ROOT_VIEW;
                     showFloatWindowDelay();
                     break;
                 case R.id.navigation_B:
-                    floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_APP_DIALOG;
+                    floatWindowType = FloatWindowManager.FW_TYPE_APP_DIALOG;
                     mTextMessage.setText("WM实现，无需权限，但不能在桌面显示");
                     showFloatWindow();
                     break;
                 case R.id.navigation_C:
-                    floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW;
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        floatWindowType = FloatWindowManager.FW_TYPE_APPLICATION_OVERLAY;
+                    } else {
+                        floatWindowType = FloatWindowManager.FW_TYPE_ALERT_WINDOW;
+                    }
                     mTextMessage.setText("window Manager实现，需权限，退出应用，可在桌面显示，存在兼容性问题（某些ROM机型可能无法显示）");
                     checkPermissionAndShow();
                     break;

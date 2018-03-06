@@ -13,7 +13,7 @@ public class SubCActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
+        floatWindowType = FloatWindowManager.FW_TYPE_ROOT_VIEW;
     }
 
     @Override

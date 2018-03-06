@@ -47,10 +47,10 @@ void updateViewLayout (View view, WindowManager.LayoutParams params)//更新悬�
                 | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
                 | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
-        if (float_window_type == FLOAT_WINDOW_TYPE_DIALOG) {
+        if (float_window_type == FW_TYPE_DIALOG) {
             //wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
             wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        } else if (float_window_type == FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
+        } else if (float_window_type == FW_TYPE_ALERT_WINDOW) {
             //需要权限
             wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         }

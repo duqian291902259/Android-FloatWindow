@@ -89,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (floatWindowType != FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
+        if (floatWindowType != FloatWindowManager.FW_TYPE_ALERT_WINDOW) {
             if (isShowFloatWindow()) {
                 //不要放在closeFloatWindow()中，可能会导致其他界面熄屏
                 clearScreenOn();
@@ -238,7 +238,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void destroyWindow() {
-        if (floatWindowType!= FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
+        if (floatWindowType!= FloatWindowManager.FW_TYPE_ALERT_WINDOW) {
             closeFloatWindow();
         }
     }
