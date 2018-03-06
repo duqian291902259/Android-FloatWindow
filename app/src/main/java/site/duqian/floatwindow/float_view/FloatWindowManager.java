@@ -8,17 +8,21 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import site.duqian.floatwindow.BaseActivity;
+import site.duqian.floatwindow.uitls.SystemUtils;
 
 /**
  * FloatWindowManager:管理悬浮窗视频播放
+ * android.view.WindowManager$BadTokenException:
+ * Unable to add window android.view.ViewRootImpl$W@123e0ab --
+ * permission denied for this window 2003,type
  *
- * @author Nonolive-杜乾 Created on 2017/12/12 - 17:35.
+ * @author Nonolive-杜乾 Created on 2017/12/12-17:35.
  *         E-mail:dusan.du@nonolive.com
  */
+
 public class FloatWindowManager {
-    private static final String TAG = FloatWindowManager.class.getSimpleName();
-    public static final int FLOAT_WINDOW_TYPE_DIALOG = 10;
-    public static final int FLOAT_WINDOW_TYPE_ROOT_VIEW = 11;
+    public static final int FLOAT_WINDOW_TYPE_ROOT_VIEW = 10;
+    public static final int FLOAT_WINDOW_TYPE_APP_DIALOG = 11;
     public static final int FLOAT_WINDOW_TYPE_ALERT_WINDOW = 12;
     private int float_window_type = 0;
     private IFloatView floatView;
@@ -26,35 +30,36 @@ public class FloatWindowManager {
     private FrameLayout contentView;
     private FloatViewParams floatViewParams;
     private WindowManager windowManager;
-    private PositionWrapper livePlayerWrapper;
+    private LastWindowInfo livePlayerWrapper;
     private BaseActivity activity;
-    private int actionBarHeight = 0;
 
     public FloatWindowManager() {
-        livePlayerWrapper = PositionWrapper.getInstance();
+        livePlayerWrapper = LastWindowInfo.getInstance();
     }
 
     /**
-     * 显示悬浮视频小窗口
+     * 显示悬浮窗口
      */
     public synchronized void showFloatWindow(BaseActivity baseActivity, int floatWindowType) {
         if (baseActivity == null) {
             return;
         }
-        actionBarHeight = baseActivity.getActionBarHeight();
-        float_window_type = floatWindowType;
-        Context mContext = baseActivity.getApplicationContext();
         activity = baseActivity;
+        Context mContext = baseActivity.getApplicationContext();
+        showFloatWindow(mContext, floatWindowType);
+    }
 
+    public synchronized void showFloatWindow(Context context, int floatWindowType) {
+        if (context == null) {
+            return;
+        }
+        float_window_type = floatWindowType;
         try {
             isFloatWindowShowing = true;
-            initFloatWindow(mContext);
+            initFloatWindow(context);
         } catch (Exception e) {
             e.printStackTrace();
             isFloatWindowShowing = false;
-            /*android.view.WindowManager$BadTokenException:
-             Unable to add window android.view.ViewRootImpl$W@123e0ab --
-             permission denied for this window 2003*/
         }
     }
 
@@ -80,10 +85,17 @@ public class FloatWindowManager {
      * @param mContext
      */
     private void initCommonFloatView(Context mContext) {
-        floatView = new FloatView(mContext, floatViewParams);
-        View rootView = activity.getWindow().getDecorView().getRootView();
-        contentView = (FrameLayout) rootView.findViewById(android.R.id.content);
-        contentView.addView((View) floatView);
+        try {
+            if (activity == null) {
+                return;
+            }
+            floatView = new FloatView(mContext, floatViewParams);
+            View rootView = activity.getWindow().getDecorView().getRootView();
+            contentView = (FrameLayout) rootView.findViewById(android.R.id.content);
+            contentView.addView((View) floatView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -102,7 +114,7 @@ public class FloatWindowManager {
                 | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
                 | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
-        if (float_window_type == FLOAT_WINDOW_TYPE_DIALOG) {
+        if (float_window_type == FLOAT_WINDOW_TYPE_APP_DIALOG) {
             //wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
             wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
         } else if (float_window_type == FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
@@ -119,9 +131,13 @@ public class FloatWindowManager {
         wmParams.y = floatViewParams.y;
 
         floatView = new FloatWindowView(mContext, floatViewParams, wmParams);
-        windowManager.addView((View) floatView, wmParams);
+        try {
+            windowManager.addView((View) floatView, wmParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        ((FloatWindowView)floatView).setWindowType(float_window_type);
+        ((FloatWindowView) floatView).setWindowType(float_window_type);
     }
 
     /**
@@ -141,8 +157,8 @@ public class FloatWindowManager {
             marginBottom += statusBarHeight;
         }
         //设置窗口大小，已view、视频大小做调整
-        int winWidth = PositionWrapper.getInstance().getWidth();
-        int winHeight = PositionWrapper.getInstance().getHeight();
+        int winWidth = LastWindowInfo.getInstance().getWidth();
+        int winHeight = LastWindowInfo.getInstance().getHeight();
         int margin = SystemUtils.dip2px(mContext, 15);
         int width = 0;
         if (winWidth <= winHeight) {
@@ -200,7 +216,7 @@ public class FloatWindowManager {
         }
         try {
             if (windowManager != null && floatView != null) {
-                windowManager.removeViewImmediate((View) floatView);
+                removeWindow();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -211,5 +227,13 @@ public class FloatWindowManager {
         floatView = null;
         windowManager = null;
         contentView = null;
+    }
+
+    private void removeWindow() {
+        try {
+            windowManager.removeViewImmediate((View) floatView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

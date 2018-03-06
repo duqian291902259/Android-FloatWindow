@@ -1,4 +1,4 @@
-package site.duqian.floatwindow.float_view;
+package site.duqian.floatwindow.uitls;
 
 import android.content.Context;
 import android.content.res.Resources;

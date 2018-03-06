@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import site.duqian.floatwindow.R;
+import site.duqian.floatwindow.uitls.SystemUtils;
 
 
 /**
@@ -486,11 +487,6 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     };
 
     @Override
-    public void onPlayerError(int what, int extra) {
-
-    }
-
-    @Override
     public FloatViewParams getParams() {
         params.contentWidth = getContentViewWidth();
         params.x = mWindowParams.x;
@@ -501,32 +497,16 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     }
 
     @Override
-    public void onPlayerCompletion() {
-
-    }
-
-
-    @Override
-    public void release() {
-        removeDelayCallBacks();
-    }
-
-    @Override
     public void setFloatViewListener(FloatViewListener listener) {
         this.listener = listener;
     }
 
     public void setWindowType(int float_window_type) {
-        if (float_window_type == FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG) {
+        if (float_window_type == FloatWindowManager.FLOAT_WINDOW_TYPE_APP_DIALOG) {
             tv_info.setText(getResources().getString(R.string.title_float_window_dialog));
         } else if (float_window_type == FloatWindowManager.FLOAT_WINDOW_TYPE_ALERT_WINDOW) {
             tv_info.setText(getResources().getString(R.string.title_alert_window));
         }
-    }
-
-
-    private void removeDelayCallBacks() {
-        removeCallbacks(dispalyZoomBtnRunnable);
     }
 
 }

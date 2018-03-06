@@ -8,10 +8,5 @@ package site.duqian.floatwindow.float_view;
  */
 public interface IFloatView {
     public FloatViewParams getParams();
-    public void onPlayerCompletion();
-    public void release();
-    public void onPlayerError(int what, int extra);
     public void setFloatViewListener(FloatViewListener listener);
-
-    //void setWindowType(int float_window_type);
 }

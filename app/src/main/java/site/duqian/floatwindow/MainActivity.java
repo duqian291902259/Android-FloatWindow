@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import site.duqian.floatwindow.activity.SubAActivity;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
-import site.duqian.floatwindow.float_view.PositionWrapper;
+import site.duqian.floatwindow.float_view.LastWindowInfo;
 
 public class MainActivity extends BaseActivity {
 
@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initData() {
         floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_ROOT_VIEW;
-        //floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG;
+        //floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_APP_DIALOG;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity {
             int itemId = item.getItemId();
             Log.d("dq", "id=" + itemId);
             closeFloatWindow();
-            PositionWrapper.getInstance().clear();
+            LastWindowInfo.getInstance().clear();
 
             switch (itemId) {
                 case R.id.navigation_A:
@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity {
                     showFloatWindowDelay();
                     break;
                 case R.id.navigation_B:
-                    floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_DIALOG;
+                    floatWindowType = FloatWindowManager.FLOAT_WINDOW_TYPE_APP_DIALOG;
                     mTextMessage.setText("WM实现，无需权限，但不能在桌面显示");
                     showFloatWindow();
                     break;
