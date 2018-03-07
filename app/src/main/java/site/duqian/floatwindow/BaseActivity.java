@@ -69,6 +69,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         showFloatWindowDelay();
+        /*BadTokenException: Unable to add window --
+         token null is not valid; is your activity running?*/
     }
 
     protected void showFloatWindowDelay() {
@@ -214,7 +216,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void checkPermissionAndShow() {
         // 检查是否已经授权
         if (FloatingPermissionCompat.get().check(mContext)) {
-            showFloatWindow();
+            showFloatWindowDelay();
         } else {
             // 授权提示
             new AlertDialog.Builder(mContext).setTitle("悬浮窗权限未开启")

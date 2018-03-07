@@ -64,7 +64,7 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     private void initView() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        floatView = inflater.inflate(R.layout.view_float_window, null);
+        floatView = inflater.inflate(R.layout.float_view_inner_layout, null);
         content_wrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
         iv_zoom_btn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);

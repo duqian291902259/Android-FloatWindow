@@ -16,7 +16,7 @@ import site.duqian.floatwindow.uitls.SystemUtils;
 
 
 /**
- * FloatWindowView:桌面悬浮窗控件-利用windowManger控制窗口
+ * FloatWindowView:悬浮球控件-利用windowManger控制窗口
  *
  * @author Nonolive-杜乾 Created on 2017/12/12 - 17:16.
  *         E-mail:dusan.du@nonolive.com
@@ -49,7 +49,6 @@ public class FloatBallView extends FrameLayout implements IFloatView {
     private int videoViewMargin;
     private boolean isSdkGt23 = false;//sdk版本是否>=23
 
-
     public FloatBallView(Context mContext, FloatViewParams floatViewParams, WindowManager.LayoutParams wmParams) {
         super(mContext);
         this.params = floatViewParams;
@@ -64,7 +63,7 @@ public class FloatBallView extends FrameLayout implements IFloatView {
 
     private void initView() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View floatView = inflater.inflate(R.layout.view_float_window, null);
+        View floatView = inflater.inflate(R.layout.float_view_desktop_layout, null);
         content_wrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
         tv_info = (TextView) floatView.findViewById(R.id.tv_info);
@@ -499,19 +498,6 @@ public class FloatBallView extends FrameLayout implements IFloatView {
     @Override
     public void setFloatViewListener(FloatViewListener listener) {
         this.listener = listener;
-    }
-
-    public void setWindowType(int float_window_type) {
-        if (float_window_type == FloatWindowManager.FW_TYPE_APP_DIALOG) {
-            tv_info.setText(getResources().getString(R.string.title_float_window_dialog));
-        } else if (float_window_type == FloatWindowManager.FW_TYPE_ALERT_WINDOW) {
-            tv_info.setText(getResources().getString(R.string.title_alert_window));
-        }
-    }
-
-
-    private void removeDelayCallBacks() {
-        removeCallbacks(dispalyZoomBtnRunnable);
     }
 
 }

@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
                 case R.id.navigation_B:
                     floatWindowType = FloatWindowManager.FW_TYPE_APP_DIALOG;
                     mTextMessage.setText("WM实现，无需权限，但不能在桌面显示");
-                    showFloatWindow();
+                    showFloatWindowDelay();
                     break;
                 case R.id.navigation_C:
                     if (Build.VERSION.SDK_INT >= 26) {

@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/fix_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/icon_head"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/ic_launcher"/>
+
+    <RelativeLayout
+        android:id="@+id/content_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/icon_head"
+        android:layout_centerInParent="true">
+        <!--视频主体-->
+        <RelativeLayout
+            android:id="@+id/videoViewWrap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:background="#CCC"
+            android:padding="1dp">
+
+
+            <ImageView
+                android:id="@+id/iv_live_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/myphoto"/>
+
+            <ImageView
+                android:id="@+id/iv_close_window"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/nn_paster_btn_close"
+                />
+
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/content_tips"
+                android:textColor="@color/colorWhite"
+                android:textSize="14dp"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+
+        <!--缩放按钮-->
+        <ImageView
+            android:id="@+id/iv_zoom_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:paddingBottom="20dp"
+            android:paddingRight="20dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/nn_paster_btn_scale"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+</RelativeLayout>
