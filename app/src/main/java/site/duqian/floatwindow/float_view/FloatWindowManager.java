@@ -25,7 +25,6 @@ public class FloatWindowManager {
     public static final int FW_TYPE_ROOT_VIEW = 10;
     public static final int FW_TYPE_APP_DIALOG = 11;
     public static final int FW_TYPE_ALERT_WINDOW = 12;
-    public static final int FW_TYPE_APPLICATION_OVERLAY = 13;
     private int float_window_type = 0;
     private IFloatView floatView;
     private boolean isFloatWindowShowing = false;
@@ -117,16 +116,18 @@ public class FloatWindowManager {
                 | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
         if (float_window_type == FW_TYPE_APP_DIALOG) {
+            //这个一定要activity running
             //wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;//TYPE_TOAST
-            wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;//targetSDK必须小于26
-        } else if (float_window_type == FW_TYPE_ALERT_WINDOW) {//需要权限
-            wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        } else if (float_window_type == FW_TYPE_APPLICATION_OVERLAY) {
-            if (Build.VERSION.SDK_INT>=26) {
+            //TYPE_TOAST targetSDK必须小于26
+            wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+        } else if (float_window_type == FW_TYPE_ALERT_WINDOW) {
+            //需要权限
+            if (Build.VERSION.SDK_INT >= 26) {
                 wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            }else {
+                wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             }
         }
-
         wmParams.format = PixelFormat.RGBA_8888;
         wmParams.gravity = Gravity.START | Gravity.TOP;
 

@@ -21,7 +21,7 @@ public class SubCActivity extends BaseActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         mTextMessage.setText(R.string.tips_no_float_window);
         findViewById(R.id.btn_open_no_float_win).setVisibility(View.GONE);
-        findViewById(R.id.btn_open).setVisibility(View.GONE);
+        findViewById(R.id.btn_open_wm).setVisibility(View.GONE);
     }
 
     @Override

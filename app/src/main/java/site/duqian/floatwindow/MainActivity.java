@@ -1,7 +1,6 @@
 package site.duqian.floatwindow;
 
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
@@ -33,7 +32,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         mTextMessage = (TextView) findViewById(R.id.message);
-        mBtnOpen = (Button) findViewById(R.id.btn_open);
+        mBtnOpen = (Button) findViewById(R.id.btn_open_wm);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -64,16 +63,12 @@ public class MainActivity extends BaseActivity {
                     break;
                 case R.id.navigation_B:
                     floatWindowType = FloatWindowManager.FW_TYPE_APP_DIALOG;
-                    mTextMessage.setText("WM实现，无需权限，但不能在桌面显示");
+                    mTextMessage.setText("WM实现，无需权限，targetSDK必须小于25，不能在桌面显示");
                     showFloatWindowDelay();
                     break;
                 case R.id.navigation_C:
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        floatWindowType = FloatWindowManager.FW_TYPE_APPLICATION_OVERLAY;
-                    } else {
-                        floatWindowType = FloatWindowManager.FW_TYPE_ALERT_WINDOW;
-                    }
-                    mTextMessage.setText("window Manager实现，需权限，退出应用，可在桌面显示，存在兼容性问题（某些ROM机型可能无法显示）");
+                    floatWindowType = FloatWindowManager.FW_TYPE_ALERT_WINDOW;
+                    mTextMessage.setText("window Manager实现，需权限，退出应用，可在桌面显示，可能存在兼容性问题");
                     checkPermissionAndShow();
                     break;
                 default:

@@ -17,12 +17,12 @@
         android:id="@+id/btn_open_no_float_win"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_open"
+        android:layout_above="@+id/btn_open_wm"
         android:layout_margin="10dp"
         android:text="@string/btn_txt_open_no_fw"/>
 
     <Button
-        android:id="@+id/btn_open"
+        android:id="@+id/btn_open_wm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

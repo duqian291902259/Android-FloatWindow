@@ -20,7 +20,7 @@ public class SubAActivity extends BaseActivity {
     @Override
     protected void initView() {
         mTextMessage = (TextView) findViewById(R.id.message);
-        findViewById(R.id.btn_open).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_open_wm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(mContext, SubBActivity.class));
