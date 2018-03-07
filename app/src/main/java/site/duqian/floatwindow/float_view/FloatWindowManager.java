@@ -118,7 +118,7 @@ public class FloatWindowManager {
 
         if (float_window_type == FW_TYPE_APP_DIALOG) {
             //wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;//TYPE_TOAST
-            wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+            wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;//targetSDK必须小于26
         } else if (float_window_type == FW_TYPE_ALERT_WINDOW) {//需要权限
             wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         } else if (float_window_type == FW_TYPE_APPLICATION_OVERLAY) {
