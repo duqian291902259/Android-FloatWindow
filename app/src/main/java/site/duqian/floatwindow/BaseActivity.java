@@ -122,7 +122,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 显示悬浮窗
      */
     protected void showFloatWindow() {
-        closeFloatWindow();
+        //closeFloatWindow();//如果要显示多个悬浮窗，可以不关闭，这里只显示一个
         floatWindowManager.showFloatWindow(this, floatWindowType);
         addFloatWindowClickListener();
     }
