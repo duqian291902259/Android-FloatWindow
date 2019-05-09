@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -32,7 +31,7 @@ import site.duqian.floatwindow.float_view.IFloatView;
  * Description:Activity基类
  *
  * @author 杜乾-Dusan,Created on 2018/2/9 - 15:52.
- *         E-mail:duqian2010@gmail.com
+ * E-mail:duqian2010@gmail.com
  */
 public abstract class BaseActivity extends AppCompatActivity {
     protected Context mContext;
@@ -45,8 +44,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!isShowTitle()) {
             //隐藏标题栏
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            //隐藏状态栏
-            // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         int layoutId = getLayoutResId();
         if (layoutId > 0) {
@@ -69,13 +66,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         showFloatWindowDelay();
-        /*BadTokenException: Unable to add window --
-         token null is not valid; is your activity running?*/
     }
 
+    /**
+     * 必须等activity创建后，view展示了再addView，否则可能崩溃
+     * BadTokenException: Unable to add window --token null is not valid; is your activity running?
+     */
     protected void showFloatWindowDelay() {
         if (rootView != null && isShowFloatWindow()) {
-            Log.d("dq ", " ShowFloatWindow");
+            rootView.removeCallbacks(floatWindowRunnable);
             rootView.post(floatWindowRunnable);
         }
     }
@@ -85,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected boolean isShowTitle() {
-        return false;
+        return true;
     }
 
     @Override
@@ -122,7 +121,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 显示悬浮窗
      */
     protected void showFloatWindow() {
-        //closeFloatWindow();//如果要显示多个悬浮窗，可以不关闭，这里只显示一个
+        closeFloatWindow();//如果要显示多个悬浮窗，可以不关闭，这里只显示一个
         floatWindowManager.showFloatWindow(this, floatWindowType);
         addFloatWindowClickListener();
     }
@@ -194,25 +193,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         Toast.makeText(mContext, "FloatWindow clicked", Toast.LENGTH_LONG).show();
     }
 
-    /**
-     * 获取标题栏高度-方法1
-     * 标题栏高度 = View绘制区顶端位置 - 应用区顶端位置(也可以是状态栏高度，获取状态栏高度方法3中说过了)
-     */
-    public int getActionBarHeight() {
-        int height = 0;
-        //应用区域
-        Rect outRect1 = new Rect();
-        getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect1);
-
-        //View绘制区域
-        Rect outRect2 = new Rect();
-        int viewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
-
-        height = Math.abs(outRect1.top - viewTop);
-        Log.d("duqian", "dq 标题栏高度：" + height);
-        return height;
-    }
-
     protected void checkPermissionAndShow() {
         // 检查是否已经授权
         if (FloatingPermissionCompat.get().check(mContext)) {
@@ -240,7 +220,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void destroyWindow() {
-        if (floatWindowType!= FloatWindowManager.FW_TYPE_ALERT_WINDOW) {
+        if (floatWindowType != FloatWindowManager.FW_TYPE_ALERT_WINDOW) {
             closeFloatWindow();
         }
     }
@@ -272,22 +252,22 @@ public abstract class BaseActivity extends AppCompatActivity {
                         //在用户已经拒绝授权的情况下，如果shouldShowRequestPermissionRationale返回false则
                         // 可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
-                            new AlertDialog.Builder(BaseActivity.this).setTitle("申请权限")//设置对话框标题
-                                    .setMessage(
-                                            "获取相关权限失败:" + permissionName +
-                                                    "将导致部分功能无法正常使用，需要到设置页面手动授权")//设置显示的内容
-                                    .setPositiveButton("去授权", new DialogInterface.OnClickListener() {//添加确定按钮
+                            new AlertDialog.Builder(BaseActivity.this).setTitle("申请权限")
+                                    //设置对话框标题
+                                    .setMessage("获取相关权限失败:" + permissionName + "将导致部分功能无法正常使用，需要到设置页面手动授权")
+                                    //设置显示的内容
+                                    .setPositiveButton("去授权", new DialogInterface.OnClickListener() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
+                                        public void onClick(DialogInterface dialog, int which) {
                                             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                                             Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
                                             intent.setData(uri);
                                             startActivity(intent);
                                             dialog.dismiss();
                                         }
-                                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加返回按钮
+                                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {//响应事件
+                                public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
                             }).setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -333,15 +313,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
                 isAllGranted = false;
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
-                    new AlertDialog.Builder(BaseActivity.this).setTitle("PermissionTest")//设置对话框标题
+                    new AlertDialog.Builder(BaseActivity.this).setTitle("PermissionTest")
+                            //设置对话框标题
                             //"【用户曾经拒绝过你的请求，所以这次发起请求时解释一下】" +
                             .setMessage(
                                     "您好，需要如下权限：" + permissionNames +
                                             " 请允许，否则将影响xit功能的正常使用。")//设置显示的内容
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加确定按钮
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                //添加确定按钮
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
-                                    //TODO Auto-generated method stub
                                     ActivityCompat.requestPermissions(((Activity) context), permissions, mRequestCode);
                                 }
                             }).show();//在按键响应事件中显示此对话框

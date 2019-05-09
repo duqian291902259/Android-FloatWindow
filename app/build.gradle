@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "site.duqian.floatwindow"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 25 //如果targetSDKF大于25，第二个无需权限的demo无法显示，视情况选择实现方式
         versionCode 1
         versionName "1.0"
         //vectorDrawables.useSupportLibrary = true

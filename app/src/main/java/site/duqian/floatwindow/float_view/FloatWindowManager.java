@@ -137,6 +137,28 @@ public class FloatWindowManager {
         wmParams.y = floatViewParams.y;
 
         floatView = new FloatWindowView(mContext, floatViewParams, wmParams);
+        //监听关闭悬浮窗
+        floatView.setFloatViewListener(new FloatViewListener() {
+            @Override
+            public void onClose() {
+                dismissFloatWindow();
+            }
+
+            @Override
+            public void onClick() {
+
+            }
+
+            @Override
+            public void onMoved() {
+
+            }
+
+            @Override
+            public void onDragged() {
+
+            }
+        });
         try {
             windowManager.addView((View) floatView, wmParams);
         } catch (Exception e) {

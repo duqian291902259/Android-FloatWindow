@@ -7,6 +7,12 @@ import site.duqian.floatwindow.BaseActivity;
 import site.duqian.floatwindow.R;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 
+/**
+ * description:
+ *
+ * @author 杜小菜 Created on 2019-05-09 - 10:33.
+ * E-mail:duqian2010@gmail.com
+ */
 public class SubCActivity extends BaseActivity {
 
     private TextView mTextMessage;
@@ -18,7 +24,7 @@ public class SubCActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mTextMessage = (TextView) findViewById(R.id.message);
+        mTextMessage = findViewById(R.id.message);
         mTextMessage.setText(R.string.tips_no_float_window);
         findViewById(R.id.btn_open_no_float_win).setVisibility(View.GONE);
         findViewById(R.id.btn_open_wm).setVisibility(View.GONE);
