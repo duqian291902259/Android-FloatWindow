@@ -95,7 +95,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         statusBarHeight = params.statusBarHeight;
         screenWidth = params.screenWidth;
         screenHeight = params.screenHeight - statusBarHeight;//要去掉状态栏高度
-        videoViewMargin = params.videoViewMargin;
+        videoViewMargin = params.viewMargin;
         mMaxWidth = params.mMaxWidth;
         mMinWidth = params.mMinWidth;
         mRatio = params.mRatio;

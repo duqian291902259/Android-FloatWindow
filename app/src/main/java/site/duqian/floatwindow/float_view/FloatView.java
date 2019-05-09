@@ -16,15 +16,13 @@ import android.widget.TextView;
 
 import site.duqian.floatwindow.R;
 
-
 /**
  * NonoFloatView:悬浮窗控件V2,普通的实现
  *
  * @author Nonolive-杜乾 Created on 2017/12/12 - 17:16.
- *         E-mail:dusan.du@nonolive.com
+ * E-mail:dusan.du@nonolive.com
  */
 public class FloatView extends FrameLayout implements IFloatView {
-    private static final String TAG = FloatView.class.getSimpleName();
     private float xInView;
     private float yInView;
     private float xInScreen;
@@ -33,25 +31,27 @@ public class FloatView extends FrameLayout implements IFloatView {
     private float yDownInScreen;
     private Context mContext;
     private RelativeLayout videoViewWrap;
-    private RelativeLayout content_wrap;
-    private ImageView iv_zoom_btn;
-
+    private RelativeLayout contentWrap;
+    private ImageView ivZoomBtn;
     private FloatViewParams params = null;
     private FloatViewListener listener;
     private int screenWidth;
     private int screenHeight;
+    private int statusBarHeight;
     private int mMinWidth;//初始宽度
     private int mMaxWidth;//视频最大宽度
     private float mRatio = 1.77f;//窗口高/宽比
-    private int videoViewMargin;
+    private int viewMargin;
     private View floatView;
+    //悬浮窗可以移动的区域高度
+    private int realHeight;
 
     public FloatView(Context mContext) {
         super(mContext);
         init();
     }
 
-    public FloatView(@NonNull Context mContext, FloatViewParams params) {
+    public FloatView(@NonNull Context mContext, @NonNull FloatViewParams params) {
         super(mContext);
         this.params = params;
         init();
@@ -65,14 +65,14 @@ public class FloatView extends FrameLayout implements IFloatView {
     private void initView() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         floatView = inflater.inflate(R.layout.float_view_inner_layout, null);
-        content_wrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
+        contentWrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
         videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
-        iv_zoom_btn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
+        ivZoomBtn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
         TextView tv_info = (TextView) floatView.findViewById(R.id.tv_info);
         tv_info.setText(getResources().getString(R.string.title_app_float_view));
-        iv_zoom_btn.setOnTouchListener(onZoomBtnTouchListener);
-        content_wrap.setOnTouchListener(onMovingTouchListener);
-        content_wrap.addOnLayoutChangeListener(onLayoutChangeListener);
+        ivZoomBtn.setOnTouchListener(onZoomBtnTouchListener);
+        contentWrap.setOnTouchListener(onMovingTouchListener);
+        contentWrap.addOnLayoutChangeListener(onLayoutChangeListener);
 
         floatView.findViewById(R.id.iv_close_window).setOnClickListener(new OnClickListener() {
             @Override
@@ -83,7 +83,6 @@ public class FloatView extends FrameLayout implements IFloatView {
             }
         });
 
-
         int lastViewWidth = params.contentWidth;
         int lastViewHeight = (int) (lastViewWidth * mRatio);
         updateViewLayoutParams(lastViewWidth, lastViewHeight);
@@ -92,26 +91,30 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     private void initData() {
         mContext = getContext();
-        videoViewMargin = params.videoViewMargin;
-        screenWidth = params.screenWidth;
-        screenHeight = params.screenHeight;
-        mMaxWidth = params.mMaxWidth;
-        mMinWidth = params.mMinWidth;
-        mRatio = params.mRatio;
+        if (params != null) {
+            viewMargin = params.viewMargin;
+            screenWidth = params.screenWidth;
+            screenHeight = params.screenHeight;
+            statusBarHeight = params.statusBarHeight;
+            realHeight = screenHeight - statusBarHeight - params.titleBarHeight;
+            mMaxWidth = params.mMaxWidth;
+            mMinWidth = params.mMinWidth;
+            mRatio = params.mRatio;
 
-        oldX = params.x;
-        oldY = params.y;
-        mRight = params.x + params.width;
-        mBottom = params.y + params.height;
-        //Log.d(TAG, " dq mRight=" + mRight + "/" + mBottom + ",rangeWidth=" + mMinWidth + "-" + mMaxWidth + ",mRatio=" + mRatio);
+            oldX = params.x;
+            oldY = params.y;
+            mRight = params.x + params.width;
+            mBottom = params.y + params.height;
+        }
+        // 如果显示了通知栏，标题栏，移动的区域边界问题要处理一下
     }
 
     private void updateViewLayoutParams(int width, int height) {
-        if (content_wrap != null) {
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) content_wrap.getLayoutParams();
+        if (contentWrap != null) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) contentWrap.getLayoutParams();
             layoutParams.height = height;
             layoutParams.width = width;
-            content_wrap.setLayoutParams(layoutParams);
+            contentWrap.setLayoutParams(layoutParams);
             params.width = width;
             params.height = height;
         }
@@ -121,36 +124,50 @@ public class FloatView extends FrameLayout implements IFloatView {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!isRestorePosition) {
-            content_wrap.layout(oldX, oldY, oldX + params.width, oldY + params.height);
+            contentWrap.layout(oldX, oldY, oldX + params.width, oldY + params.height);
             isRestorePosition = true;
         }
     }
 
-    private boolean isRestorePosition = false;//是否恢复上次页面位置
+    //是否恢复上次页面位置
+    private boolean isRestorePosition = false;
     private int oldX = 0;
     private int oldY = 0;
-    // 监听layout变化
+    /**
+     * 监听layout变化
+     * left: View 左上顶点相对于父容器的横坐标
+     * top: View 左上顶点相对于父容器的纵坐标
+     * right: View 右下顶点相对于父容器的横坐标
+     * bottom: View 右下顶点相对于父容器的纵坐标
+     */
     private final OnLayoutChangeListener onLayoutChangeListener = new OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
             if (right != mRight || bottom != mBottom) {
-                //Log.d(TAG, "dq onLayoutChange111 left=" + left + ",top=" + top + ",right=" + right + ",bottom=" + bottom);
-                int width = content_wrap.getWidth();
-                int height = content_wrap.getHeight();
+                //Log.d("float", "dq onLayoutChange111 left=" + left + ",top=" + top + ",right=" + right + ",bottom=" + bottom);
+                int width = contentWrap.getWidth();
+                int height = contentWrap.getHeight();
                 //防止拖出屏幕外部,顶部和右下角处理
                 int l = mRight - width;
                 int t = mBottom - height;
                 int r = mRight;
                 int b = mBottom;
-                if (l < -videoViewMargin) {
-                    l = -videoViewMargin;
+                if (l < -viewMargin) {
+                    l = -viewMargin;
                     r = l + width;
                 }
-                if (t < -videoViewMargin) {
-                    t = -videoViewMargin;
+                if (t < -viewMargin) {
+                    t = -viewMargin;
                     b = t + height;
                 }
-                content_wrap.layout(l, t, r, b);
+                /*if (b > realHeight) {
+                    b = realHeight;
+                }*/
+                try {
+                    contentWrap.layout(l, t, r, b);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 params.x = l;
                 params.y = t;
             }
@@ -172,8 +189,8 @@ public class FloatView extends FrameLayout implements IFloatView {
                     lastX = event.getRawX();
                     lastY = event.getRawY();
                     //记录右下角定点的位置，right 和 bottom
-                    mRight = content_wrap.getRight();
-                    mBottom = content_wrap.getBottom();
+                    mRight = contentWrap.getRight();
+                    mBottom = contentWrap.getBottom();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     showZoomView();
@@ -199,20 +216,22 @@ public class FloatView extends FrameLayout implements IFloatView {
             float dx = moveX - lastX;
             float dy = moveY - lastY;
             double distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance >= 5) {//控制刷新频率
+            if (distance >= 5) {
                 //已经是最大或者最小不缩放
-                int contentWidth = content_wrap.getWidth();
+                int contentWidth = contentWrap.getWidth();
                 if (moveY > lastY && moveX > lastX) {
-                    if (contentWidth == mMinWidth) {//最小了，不能再小了
+                    if (contentWidth == mMinWidth) {
+                        //最小了，不能再小了
                         return;
                     }
-                    distance = -distance;//缩小
+                    //缩小
+                    distance = -distance;
                 } else {
                     if (contentWidth == mMaxWidth) {
                         return;
                     }
                 }
-                int changedWidth = (int) (distance * Math.cos(45));//粗略计算
+                int changedWidth = (int) (distance * Math.cos(45));
                 //调节内部view大小
                 updateContentViewSize(changedWidth);
             }
@@ -222,7 +241,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     };
 
     public int getContentViewWidth() {
-        return content_wrap != null ? content_wrap.getWidth() : mMinWidth;
+        return contentWrap != null ? contentWrap.getWidth() : mMinWidth;
     }
 
     /**
@@ -231,12 +250,10 @@ public class FloatView extends FrameLayout implements IFloatView {
      * @param width 传入变化的宽度
      */
     private void updateContentViewSize(int width) {
-        int currentWidth = content_wrap.getWidth();
+        int currentWidth = contentWrap.getWidth();
         int newWidth = currentWidth + width;
         newWidth = checkWidth(newWidth);
         int height = (int) (newWidth * mRatio);
-        //params.x = params.x - width / 2;
-        //params.y = params.y - width / 2;
         //调整视频view的大小
         updateViewLayoutParams(newWidth, height);
     }
@@ -279,7 +296,8 @@ public class FloatView extends FrameLayout implements IFloatView {
                 yInView = event.getY();
                 Rect rect = new Rect();
                 floatView.getGlobalVisibleRect(rect);
-                if (!rect.contains((int) xInView, (int) yInView)) {//不在移动的view内，不处理
+                if (!rect.contains((int) xInView, (int) yInView)) {
+                    //不在移动的view内，不处理
                     return false;
                 }
                 xDownInScreen = event.getRawX();
@@ -308,7 +326,6 @@ public class FloatView extends FrameLayout implements IFloatView {
                         listener.onMoved();
                     }
                 }
-                //updateEditStatus();
                 displayZoomViewDelay();
                 isMoving = false;
                 break;
@@ -320,11 +337,9 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     /**
      * 是否为点击事件
-     *
-     * @return
      */
     private boolean isClickedEvent() {
-        int scaledTouchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();// - 10;
+        int scaledTouchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();
         if (Math.abs(xDownInScreen - xInScreen) <= scaledTouchSlop
                 && Math.abs(yDownInScreen - yInScreen) <= scaledTouchSlop) {
             return true;
@@ -333,46 +348,48 @@ public class FloatView extends FrameLayout implements IFloatView {
     }
 
     /**
-     * 更新悬浮窗位置
+     * 更新悬浮窗位置,此方法用于修正移动悬浮窗的边界问题，保证不移出应用可见范围
+     * todo 待修正有标题栏的情况下的边界问题
      */
     private synchronized void updateViewPosition() {
         int x = (int) (xInScreen - xInView);
         int y = (int) (yInScreen - yInView);
+        int dWidth;
         //边界处理
-        if (x <= -videoViewMargin) {
-            x = -videoViewMargin;
+        if (x < -viewMargin) {
+            x = -viewMargin;
         }
-        if (y <= -videoViewMargin) {
-            y = -videoViewMargin;
-        }
-        int dWidth = screenWidth - content_wrap.getWidth();
-        if (x >= dWidth) {
+        dWidth = screenWidth - contentWrap.getWidth();
+
+        if (x > dWidth) {
             x = dWidth;
         }
-        int dHeight = screenHeight - content_wrap.getHeight();
-        if (y >= dHeight) {
+
+        if (y < -viewMargin) {
+            y = -viewMargin;
+        }
+
+        int dHeight = realHeight - contentWrap.getHeight();
+        if (y > dHeight) {
             y = dHeight;
         }
-        if (x >= dWidth) {
-            x = dWidth - 1;
-        }
-        Log.d(TAG, "dq updateViewPosition x=" + x + ",y=" + y);
+        Log.d("duqian", "dq updateViewPosition x=" + x + ",y=" + y);
         reLayoutContentView(x, y);
     }
 
     /**
      * 重新布局
      *
-     * @param x
-     * @param y
+     * @param x 左上角x坐标
+     * @param y 左上角y坐标
      */
     private void reLayoutContentView(int x, int y) {
         //更新起点
         params.x = x;
         params.y = y;
-        mRight = x + content_wrap.getWidth();
-        mBottom = y + content_wrap.getHeight();
-        content_wrap.layout(x, y, mRight, mBottom);
+        mRight = x + contentWrap.getWidth();
+        mBottom = y + contentWrap.getHeight();
+        contentWrap.layout(x, y, mRight, mBottom);
     }
 
     private boolean isDragged = false;//是否正在拖拽中
@@ -383,7 +400,7 @@ public class FloatView extends FrameLayout implements IFloatView {
      */
     private void showZoomView() {
         if (!isEdit) {
-            iv_zoom_btn.setVisibility(VISIBLE);
+            ivZoomBtn.setVisibility(VISIBLE);
             videoViewWrap.setBackgroundColor(getResources().getColor(R.color.float_window_bg_border_edit));
             isEdit = true;
         }
@@ -394,19 +411,8 @@ public class FloatView extends FrameLayout implements IFloatView {
      */
     private void displayZoomView() {
         isEdit = false;
-        iv_zoom_btn.setVisibility(GONE);
+        ivZoomBtn.setVisibility(GONE);
         videoViewWrap.setBackgroundColor(getResources().getColor(R.color.float_window_bg_border_normal));
-    }
-
-    /**
-     * 调整视频view的边距
-     */
-    private void updateVideoMargin(int left, int top, int right, int bottom) {
-        if (videoViewWrap != null) {
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) videoViewWrap.getLayoutParams();
-            layoutParams.setMargins(left, top, right, bottom);
-            videoViewWrap.setLayoutParams(layoutParams);
-        }
     }
 
     private void displayZoomViewDelay() {

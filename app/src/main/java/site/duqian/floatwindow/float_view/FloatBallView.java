@@ -21,7 +21,6 @@ import site.duqian.floatwindow.uitls.SystemUtils;
  * @author Nonolive-杜乾 Created on 2017/12/12 - 17:16.
  *         E-mail:dusan.du@nonolive.com
  */
-
 public class FloatBallView extends FrameLayout implements IFloatView {
     private static final String TAG = FloatBallView.class.getSimpleName();
     private float xInView;
@@ -94,7 +93,7 @@ public class FloatBallView extends FrameLayout implements IFloatView {
         statusBarHeight = params.statusBarHeight;
         screenWidth = params.screenWidth;
         screenHeight = params.screenHeight - statusBarHeight;//要去掉状态栏高度
-        videoViewMargin = params.videoViewMargin;
+        videoViewMargin = params.viewMargin;
         mMaxWidth = params.mMaxWidth;
         mMinWidth = params.mMinWidth;
         mRatio = params.mRatio;

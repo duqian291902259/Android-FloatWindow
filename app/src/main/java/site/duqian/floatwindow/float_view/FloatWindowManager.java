@@ -3,8 +3,10 @@ package site.duqian.floatwindow.float_view;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -18,7 +20,7 @@ import site.duqian.floatwindow.uitls.SystemUtils;
  * permission denied for this window 2003,type
  *
  * @author Nonolive-杜乾 Created on 2017/12/12-17:35.
- *         E-mail:dusan.du@nonolive.com
+ * E-mail:dusan.du@nonolive.com
  */
 
 public class FloatWindowManager {
@@ -86,13 +88,13 @@ public class FloatWindowManager {
      * @param mContext
      */
     private void initCommonFloatView(Context mContext) {
+        if (activity == null || mContext == null) {
+            return;
+        }
         try {
-            if (activity == null) {
-                return;
-            }
             floatView = new FloatView(mContext, floatViewParams);
             View rootView = activity.getWindow().getDecorView().getRootView();
-            contentView = (FrameLayout) rootView.findViewById(android.R.id.content);
+            contentView = rootView.findViewById(android.R.id.content);
             contentView.addView((View) floatView);
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,7 +126,7 @@ public class FloatWindowManager {
             //需要权限
             if (Build.VERSION.SDK_INT >= 26) {
                 wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            }else {
+            } else {
                 wmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
             }
         }
@@ -179,11 +181,12 @@ public class FloatWindowManager {
         int screenWidth = SystemUtils.getScreenWidth(mContext);
         int screenHeight = SystemUtils.getScreenHeight(mContext, false);
         int statusBarHeight = SystemUtils.getStatusBarHeight(mContext);
+        Log.d("dq", "screenWidth=" + screenWidth + ",screenHeight=" + screenHeight + ",statusBarHeight=" + statusBarHeight);
         //根据实际宽高和设计稿尺寸比例适应。
         int marginBottom = SystemUtils.dip2px(mContext, 150);
-        if (float_window_type == FW_TYPE_ROOT_VIEW) {
+        /*if (float_window_type == FW_TYPE_ROOT_VIEW) {
             marginBottom += statusBarHeight;
-        }
+        }*/
         //设置窗口大小，已view、视频大小做调整
         int winWidth = LastWindowInfo.getInstance().getWidth();
         int winHeight = LastWindowInfo.getInstance().getHeight();
@@ -216,14 +219,30 @@ public class FloatWindowManager {
 
         params.screenWidth = screenWidth;
         params.screenHeight = screenHeight;
+        params.statusBarHeight = statusBarHeight;
         if (float_window_type == FW_TYPE_ROOT_VIEW) {
-            params.screenHeight = screenHeight - statusBarHeight;// - actionBarHeight;
+            initTitleBarHeight(params, statusBarHeight);
+            //params.screenHeight = screenHeight - statusBarHeight;
         }
-        params.videoViewMargin = margin;
+        params.viewMargin = margin;
         params.mMaxWidth = screenWidth / 2 + margin;
         params.mMinWidth = width;
         params.mRatio = ratio;
         return params;
+    }
+
+    /**
+     * 应用内悬浮窗，边界设定，除去标题栏（96px？），状态栏高度 待优化有actionBar的情况下的移动边界问题
+     */
+    private void initTitleBarHeight(FloatViewParams params, int statusBarHeight) {
+        int titleBarHeight = 0;
+        if (activity != null) {
+            int contentTop = activity.getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
+            titleBarHeight = contentTop - statusBarHeight;
+            titleBarHeight = titleBarHeight > 0 ? titleBarHeight : 0;
+            params.titleBarHeight = titleBarHeight;
+            Log.d("dq", "titleBarHeight=" + titleBarHeight);
+        }
     }
 
     public IFloatView getFloatView() {

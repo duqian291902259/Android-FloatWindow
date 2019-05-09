@@ -19,6 +19,8 @@ public class FloatViewParams {
     public int mMinWidth;//初始宽度
     public int mMaxWidth;//视频最大宽度
     public float mRatio = 1.77f;//窗口高/宽比
-    public int videoViewMargin;//视频距离父view的边距
+    public int viewMargin;//悬浮窗距离父view的边距
+
+    public int titleBarHeight;//标题栏高度
 
 }

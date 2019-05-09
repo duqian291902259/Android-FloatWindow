@@ -12,7 +12,7 @@ import site.duqian.floatwindow.float_view.FloatWindowManager;
 import site.duqian.floatwindow.float_view.LastWindowInfo;
 
 /**
- * description:Demo展示用法
+ * description:Demo展示用法。todo 目前发现显示actionBar的情况下缩放有bug
  *
  * @author 杜小菜 Created on 2019-05-09 - 10:45.
  * E-mail:duqian2010@gmail.com

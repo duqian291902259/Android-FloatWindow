@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FloatWindow</string>
+    <string name="app_name">AndroidFloatWindow-DQ</string>
     <string name="title_app_float_view">内部悬浮窗(推荐)</string>
     <string name="title_float_window_dialog">WM弹窗(无需权限)</string>
     <string name="title_alert_window">系统弹窗(需权限)</string>
