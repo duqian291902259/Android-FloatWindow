@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+//这里是本人的签名配置，运行前请去掉
 Properties props = new Properties();
 props.load(new FileInputStream(file("../local.properties")));
 
@@ -12,12 +13,13 @@ android {
             storePassword props['KEYSTORE_PASSWORD']
         }
     }
+    //⤴️这里是本人的签名配置，运行前请去掉
 
-    compileSdkVersion 26
+    compileSdkVersion 28
     defaultConfig {
         applicationId "site.duqian.floatwindow"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         //vectorDrawables.useSupportLibrary = true
@@ -38,10 +40,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
 
     //申请悬浮窗权限
-    compile 'com.linchaolong.android:floatingpermissioncompat:1.0'
+    implementation 'com.linchaolong.android:floatingpermissioncompat:1.0'
 
 }
