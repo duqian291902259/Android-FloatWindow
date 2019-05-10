@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 //这里是本人的签名配置，运行前请去掉
-Properties props = new Properties();
-props.load(new FileInputStream(file("../local.properties")));
+Properties props = new Properties()
+props.load(new FileInputStream(file("../local.properties")))
 
 android {
     signingConfigs {
@@ -24,6 +24,8 @@ android {
         versionName "1.0"
         //vectorDrawables.useSupportLibrary = true
     }
+
+    /*去掉我的的签名配置*/
     buildTypes {
         release {
             minifyEnabled true
@@ -31,7 +33,7 @@ android {
             signingConfig signingConfigs.release
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
