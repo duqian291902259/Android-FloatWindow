@@ -184,9 +184,9 @@ public class FloatWindowManager {
         Log.d("dq", "screenWidth=" + screenWidth + ",screenHeight=" + screenHeight + ",statusBarHeight=" + statusBarHeight);
         //根据实际宽高和设计稿尺寸比例适应。
         int marginBottom = SystemUtils.dip2px(mContext, 150);
-        /*if (float_window_type == FW_TYPE_ROOT_VIEW) {
+        if (float_window_type == FW_TYPE_ROOT_VIEW) {
             marginBottom += statusBarHeight;
-        }*/
+        }
         //设置窗口大小，已view、视频大小做调整
         int winWidth = LastWindowInfo.getInstance().getWidth();
         int winHeight = LastWindowInfo.getInstance().getHeight();
@@ -256,31 +256,28 @@ public class FloatWindowManager {
         if (!isFloatWindowShowing) {
             return;
         }
-        isFloatWindowShowing = false;
-        if (floatView != null) {
-            FloatViewParams floatViewParams = floatView.getParams();
-            livePlayerWrapper.setLastParams(floatViewParams);
-        }
         try {
-            if (windowManager != null && floatView != null) {
-                removeWindow();
+            isFloatWindowShowing = false;
+            if (floatView != null) {
+                FloatViewParams floatViewParams = floatView.getParams();
+                livePlayerWrapper.setLastParams(floatViewParams);
             }
+            removeWindow();
+
+            if (contentView != null && floatView != null) {
+                contentView.removeView((View) floatView);
+            }
+            floatView = null;
+            windowManager = null;
+            contentView = null;
+            activity = null;//防止activity泄漏
         } catch (Exception e) {
-            e.printStackTrace();
         }
-        if (contentView != null && floatView != null) {
-            contentView.removeView((View) floatView);
-        }
-        floatView = null;
-        windowManager = null;
-        contentView = null;
     }
 
     private void removeWindow() {
-        try {
+        if (windowManager != null && floatView != null) {
             windowManager.removeViewImmediate((View) floatView);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

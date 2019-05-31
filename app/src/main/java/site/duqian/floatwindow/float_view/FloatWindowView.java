@@ -1,6 +1,9 @@
 package site.duqian.floatwindow.float_view;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,12 +17,11 @@ import android.widget.TextView;
 import site.duqian.floatwindow.R;
 import site.duqian.floatwindow.uitls.SystemUtils;
 
-
 /**
  * FloatWindowView:悬浮窗控件V1-利用windowManger控制窗口
  *
  * @author Nonolive-杜乾 Created on 2017/12/12 - 17:16.
- *         E-mail:dusan.du@nonolive.com
+ * E-mail:dusan.du@nonolive.com
  */
 
 public class FloatWindowView extends FrameLayout implements IFloatView {
@@ -49,6 +51,10 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     private int videoViewMargin;
     private boolean isSdkGt23 = false;//sdk版本是否>=23
 
+    public FloatWindowView(Context context) {
+        super(context);
+        init();
+    }
 
     public FloatWindowView(Context mContext, FloatViewParams floatViewParams, WindowManager.LayoutParams wmParams) {
         super(mContext);
@@ -58,8 +64,12 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     }
 
     private void init() {
-        initData();
-        initView();
+        try {
+            initData();
+            initView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView() {
@@ -83,10 +93,16 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
             }
         });
 
-        int lastViewWidth = params.contentWidth;
-        int lastViewHeight = (int) (lastViewWidth * mRatio);
+        final int lastViewWidth = params.contentWidth;
+        final int lastViewHeight = (int) (lastViewWidth * mRatio);
         updateViewLayoutParams(lastViewWidth, lastViewHeight);
         addView(floatView);
+        content_wrap.post(new Runnable() {
+            @Override
+            public void run() {
+                updateWindowWidthAndHeight(lastViewWidth, lastViewHeight);
+            }
+        });
     }
 
     private void initData() {
@@ -333,6 +349,31 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         }
     };
 
+    private long firstClickTime;//第一次点击
+    private int countClick = 0;
+    private final Runnable clickRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //Logger.d("dq-fw canClick=" + canClick);
+            if (countClick == 1 && canClick) {
+                if (listener != null) {
+                    listener.onClick();
+                }
+            }
+            countClick = 0;
+        }
+    };
+    private boolean canClick = true;//是否可以点击
+    private final Runnable canClickRunnable = new Runnable() {
+        @Override
+        public void run() {
+            canClick = true;
+        }
+    };
+
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private int scaleCount = 1;//统计双击缩放的次数
+
     //@Override
     public boolean onTouchEvent2(MotionEvent event) {
         if (isDragged) {
@@ -361,13 +402,31 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
                 break;
             case MotionEvent.ACTION_UP:
                 if (isClickedEvent()) {
-                    if (null != listener) {
-                        listener.onClick();
+                    countClick++;
+                    if (countClick == 1) {
+                        firstClickTime = System.currentTimeMillis();
+                        handler.removeCallbacks(clickRunnable);
+                        handler.postDelayed(clickRunnable, 300);
+                    } else if (countClick == 2) {
+                        long secondClickTime = System.currentTimeMillis();
+                        if (secondClickTime - firstClickTime < 300) {//双击
+                            if (listener != null) {
+                                listener.onDoubleClick();
+                            }
+                            scaleCount++;
+                            handleScaleEvent();
+                            countClick = 0;
+                            //2秒后才允许再次点击
+                            canClick = false;
+                            handler.removeCallbacks(canClickRunnable);
+                            handler.postDelayed(canClickRunnable, 1000);
+                        }
                     }
                 } else {
                     if (null != listener) {
                         listener.onMoved();
                     }
+                    countClick = 0;
                 }
                 updateEditStatus();
                 isMoving = false;
@@ -378,14 +437,32 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         return true;
     }
 
+    private void handleScaleEvent() {
+        int scaleLevel = scaleCount % 3;//缩放级别
+        int width = getFloatWindowWidth(true, screenWidth, scaleLevel);
+        int height = (int) (width * mRatio);
+        updateWindowWidthAndHeight(width, height);
+        updateViewLayoutParams(width, height);
+        Log.d("dq-fw", "handleScaleEvent width=" + width + ",height=" + height);
+    }
+
+    public int getFloatWindowWidth(boolean isPortrait, int screenWidth, int scaleLevel) {
+        int width = 0;
+        if (scaleLevel == 0) {
+            width = (int) (isPortrait ? screenWidth * 0.30f : screenWidth * 0.45f);
+        } else if (scaleLevel == 1) {
+            width = (int) (isPortrait ? screenWidth * 0.40f : screenWidth * 0.65f);
+        } else if (scaleLevel == 2) {
+            width = (int) (isPortrait ? screenWidth * 0.50f : screenWidth * 0.92f);
+        }
+        return width;
+    }
+
     private boolean isClickedEvent() {
         int scaledTouchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();
-        if (Math.abs(xDownInScreen - xInScreen) <= scaledTouchSlop
-                && Math.abs(yDownInScreen - yInScreen) <= scaledTouchSlop) {
-            // 是点击事件
-            return true;
-        }
-        return false;
+        // 是点击事件
+        return Math.abs(xDownInScreen - xInScreen) <= scaledTouchSlop
+                && Math.abs(yDownInScreen - yInScreen) <= scaledTouchSlop;
     }
 
     /**
@@ -449,7 +526,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
     }
 
     private void showZoomView() {
-        if (!isEdit ) {//&& isSdkGt23 只有6.0及以上才显示缩放按钮
+        if (!isEdit) {//&& isSdkGt23 只有6.0及以上才显示缩放按钮
             updateVideoMargin(videoViewMargin, videoViewMargin, 0, 0);
             iv_zoom_btn.setVisibility(VISIBLE);
             videoViewWrap.setBackgroundColor(getResources().getColor(R.color.float_window_bg_border_edit));

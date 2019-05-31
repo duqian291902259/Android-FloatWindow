@@ -14,18 +14,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.linchaolong.android.floatingpermissioncompat.FloatingPermissionCompat;
-
 import site.duqian.floatwindow.float_view.FloatViewListener;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 import site.duqian.floatwindow.float_view.IFloatView;
+import site.duqian.floatwindow.fw_permission.FloatWinPermissionCompat;
 
 /**
  * Description:Activity基类
@@ -158,16 +156,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onClick() {
                 onFloatWindowClick();
+                mContext.startActivity(new Intent(mContext, MainActivity.class));
             }
 
             @Override
-            public void onMoved() {
-                Log.d("dq", "onMoved");
-            }
-
-            @Override
-            public void onDragged() {
-                Log.d("dq", "onDragged");
+            public void onDoubleClick() {
+                Toast.makeText(mContext, "onDoubleClick", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -195,7 +189,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void checkPermissionAndShow() {
         // 检查是否已经授权
-        if (FloatingPermissionCompat.get().check(mContext)) {
+        if (FloatWinPermissionCompat.getInstance().check(mContext)) {
             showFloatWindowDelay();
         } else {
             // 授权提示
@@ -205,7 +199,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // 显示授权界面
-                            FloatingPermissionCompat.get().apply(mContext);
+                            try {
+                                FloatWinPermissionCompat.getInstance().apply(mContext);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     })
                     .setNegativeButton("取消", null).show();
@@ -231,10 +229,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 权限请求结果回调
-     *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -295,10 +289,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 发起权限请求
-     *
-     * @param context
-     * @param permissions
-     * @param callback
      */
     public void requestPermissions(final Context context, final String[] permissions,
                                    RequestPermissionCallBack callback) {
@@ -314,18 +304,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 isAllGranted = false;
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
                     new AlertDialog.Builder(BaseActivity.this).setTitle("PermissionTest")
-                            //设置对话框标题
-                            //"【用户曾经拒绝过你的请求，所以这次发起请求时解释一下】" +
                             .setMessage(
-                                    "您好，需要如下权限：" + permissionNames +
-                                            " 请允许，否则将影响xit功能的正常使用。")//设置显示的内容
+                                    "您好，需要如下权限：" + permissionNames + " 请允许，否则将影响xit功能的正常使用。")//设置显示的内容
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                //添加确定按钮
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
                                     ActivityCompat.requestPermissions(((Activity) context), permissions, mRequestCode);
                                 }
-                            }).show();//在按键响应事件中显示此对话框
+                            }).show();
                 } else {
                     ActivityCompat.requestPermissions(((Activity) context), permissions, mRequestCode);
                 }
