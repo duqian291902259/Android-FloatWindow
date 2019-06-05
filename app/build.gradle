@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+//apply plugin: 'com.didiglobal.booster'
 //这里是本人的签名配置，运行前请去掉
 Properties props = new Properties()
 props.load(new FileInputStream(file("../local.properties")))
@@ -45,7 +45,24 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
+    project.afterEvaluate {
+        List<Task> tasksList = tasks.toList()
+        boolean hasAssembleRelease = false
+        for (Task task : tasksList) {
+            String taskName = task.getName()
+            if ("assembleRelease" == taskName) {
+                hasAssembleRelease = true
+            }
+        }
+        if (hasAssembleRelease) {
+            tasks.getByName("assembleRelease").doLast {
+                System.out.println("assembleRelease finish ..................")
+                handleApkBuildDone()
+            }
+        }
+    }
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -54,5 +71,52 @@ dependencies {
 
     //申请悬浮窗权限
     //implementation 'com.linchaolong.android:floatingpermissioncompat:1.0'
+}
 
+// 拷贝app打包后的文件
+String handleApkBuildDone() {
+    Properties properties = getAppProperties()
+    String channel = properties.getProperty("duqian").toLowerCase()
+    String build_date = properties.getProperty("BUILD_DATE")
+    System.out.println("dq channel: " + channel + " build_date: " + build_date)
+
+    if (channel == null || channel == "") {
+        channel = "google"
+    }
+
+    String outApkName = "nono-${android.defaultConfig.versionName}-" + channel + "-" + build_date + ".apk"
+    String outMapping = "mapping-${android.defaultConfig.versionName}.txt"
+    File apkFile = new File("../release-app/", outApkName)
+    apkFile.mkdirs()
+    if (apkFile.exists()) {
+        apkFile.delete()
+    }
+
+    copy {
+        from 'build/outputs/apk/release/app-release.apk'
+        into '../release-app/'
+        rename("app-release.apk", "float-window-app-release.apk")//outApkName
+    }
+    copy {
+        from 'build/outputs/mapping/release/mapping.txt'
+        into '../release-app/'
+        rename("mapping.txt", outMapping)
+    }
+}
+
+
+static Properties getAppProperties() {
+    FileInputStream fis
+    try {
+        fis = new FileInputStream("app/src/main/assets/duqian.properties")
+        Properties prop = new Properties()
+        prop.load(fis)
+        return prop
+    } catch (Exception e) {
+    } finally {
+        if (fis != null) {
+            fis.close()
+        }
+    }
+    return null
 }
