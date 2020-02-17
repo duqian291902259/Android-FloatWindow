@@ -36,12 +36,10 @@ public class SystemUtils {
         if (screenWidth > 0) {
             return screenWidth;
         }
-
         if (mContext == null) {
             return 0;
         }
-        int screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
-        return screenWidth;
+        return mContext.getResources().getDisplayMetrics().widthPixels;
     }
 
     /**
@@ -74,7 +72,6 @@ public class SystemUtils {
             return 0;
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        //WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = getWindowManager(mContext).getDefaultDisplay();
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -160,7 +157,6 @@ public class SystemUtils {
     }
 
     public static int getStatusBarHeightByReflect(Context mContext) {
-        //int sbHeight;
         if (statusBarHeight > 0) {
             return statusBarHeight;
         }

@@ -8,18 +8,18 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import site.duqian.floatwindow.float_view.FloatViewListener;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 import site.duqian.floatwindow.float_view.IFloatView;
@@ -48,8 +48,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             rootView = LayoutInflater.from(mContext).inflate(layoutId, null);
             setContentView(rootView);
         }
-        floatWindowManager = new FloatWindowManager();
-
+        if (floatWindowManager == null) {
+            floatWindowManager = new FloatWindowManager();
+        }
         initData();
         initView();
     }
@@ -149,12 +150,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         floatView.setFloatViewListener(new FloatViewListener() {
             @Override
             public void onClose() {
+                Toast.makeText(mContext, "onClose", Toast.LENGTH_LONG).show();
                 clearScreenOn();
                 closeFloatWindow();
             }
 
             @Override
             public void onClick() {
+                Toast.makeText(mContext, "onClick", Toast.LENGTH_LONG).show();
                 onFloatWindowClick();
                 mContext.startActivity(new Intent(mContext, MainActivity.class));
             }

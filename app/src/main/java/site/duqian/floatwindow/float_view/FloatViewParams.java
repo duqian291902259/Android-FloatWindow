@@ -12,7 +12,6 @@ public class FloatViewParams {
     public int x;//窗口的x坐标
     public int y;//窗口的y坐标
     public int contentWidth;//当前窗口content view的宽度
-
     public int screenWidth;//屏幕宽度
     public int screenHeight;//屏幕高度
     public int statusBarHeight;//状态栏高度
@@ -20,7 +19,5 @@ public class FloatViewParams {
     public int mMaxWidth;//视频最大宽度
     public float mRatio = 1.77f;//窗口高/宽比
     public int viewMargin;//悬浮窗距离父view的边距
-
     public int titleBarHeight;//标题栏高度
-
 }

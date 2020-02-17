@@ -15,11 +15,11 @@ android {
     }
     //⤴️这里是本人的签名配置，运行前请去掉
 
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "site.duqian.floatwindow"
-        minSdkVersion 16
-        targetSdkVersion 25 //如果targetSDKF大于25，第二个无需权限的demo无法显示，视情况选择实现方式
+        minSdkVersion 18
+        targetSdkVersion 29 //如果targetSDKF大于25，第二个无需权限的demo无法显示，视情况选择实现方式
         versionCode 1
         versionName "1.0"
         //vectorDrawables.useSupportLibrary = true
@@ -35,25 +35,22 @@ android {
         debug {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
     }
 
     lintOptions {
         checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
         abortOnError false
     }
     project.afterEvaluate {
-        List<Task> tasksList = tasks.toList()
-        boolean hasAssembleRelease = false
+        boolean hasAssembleRelease = true
+        /*List<Task> tasksList = tasks.toList()
         for (Task task : tasksList) {
             String taskName = task.getName()
             if ("assembleRelease" == taskName) {
                 hasAssembleRelease = true
-            }
-        }
+            }*/
         if (hasAssembleRelease) {
             tasks.getByName("assembleRelease").doLast {
                 System.out.println("assembleRelease finish ..................")
@@ -66,8 +63,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
 
     //申请悬浮窗权限
     //implementation 'com.linchaolong.android:floatingpermissioncompat:1.0'

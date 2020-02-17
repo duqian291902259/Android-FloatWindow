@@ -1,12 +1,13 @@
 package site.duqian.floatwindow;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
 import site.duqian.floatwindow.activity.SubAActivity;
 import site.duqian.floatwindow.float_view.FloatWindowManager;
 import site.duqian.floatwindow.float_view.LastWindowInfo;
@@ -45,14 +46,12 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             int itemId = item.getItemId();
-            //reset
             closeFloatWindow();
             LastWindowInfo.getInstance().clear();
             switch (itemId) {

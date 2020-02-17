@@ -1,11 +1,11 @@
 
 package site.duqian.floatwindow.float_view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import site.duqian.floatwindow.R;
 
 /**
@@ -68,19 +69,21 @@ public class FloatView extends FrameLayout implements IFloatView {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         floatView = inflater.inflate(R.layout.float_view_inner_layout, null);
-        contentWrap = (RelativeLayout) floatView.findViewById(R.id.content_wrap);
-        videoViewWrap = (RelativeLayout) floatView.findViewById(R.id.videoViewWrap);
-        ivZoomBtn = (ImageView) floatView.findViewById(R.id.iv_zoom_btn);
-        TextView tv_info = (TextView) floatView.findViewById(R.id.tv_info);
+        contentWrap = floatView.findViewById(R.id.content_wrap);
+        videoViewWrap = floatView.findViewById(R.id.videoViewWrap);
+        ivZoomBtn = floatView.findViewById(R.id.iv_zoom_btn);
+        TextView tv_info = floatView.findViewById(R.id.tv_info);
         tv_info.setText(getResources().getString(R.string.title_app_float_view));
         ivZoomBtn.setOnTouchListener(onZoomBtnTouchListener);
         contentWrap.setOnTouchListener(onMovingTouchListener);
         contentWrap.addOnLayoutChangeListener(onLayoutChangeListener);
 
-        floatView.findViewById(R.id.iv_close_window).setOnClickListener(new OnClickListener() {
+        final View closeBtn = floatView.findViewById(R.id.iv_close_window);
+        closeBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != listener) {

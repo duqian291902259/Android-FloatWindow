@@ -8,11 +8,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
-
-        /*classpath "com.didiglobal.booster:booster-gradle-plugin:$booster_version"
-        classpath "com.didiglobal.booster:booster-task-all:$booster_version"
-        classpath "com.didiglobal.booster:booster-transform-all:$booster_version"*/
+        classpath 'com.android.tools.build:gradle:3.5.3'
     }
 }
 

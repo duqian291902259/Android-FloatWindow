@@ -33,11 +33,11 @@ public class FloatWindowManager {
     private FrameLayout contentView;
     private FloatViewParams floatViewParams;
     private WindowManager windowManager;
-    private LastWindowInfo livePlayerWrapper;
+    private LastWindowInfo lastWindowInfo;
     private BaseActivity activity;
 
     public FloatWindowManager() {
-        livePlayerWrapper = LastWindowInfo.getInstance();
+        lastWindowInfo = LastWindowInfo.getInstance();
     }
 
     /**
@@ -52,34 +52,24 @@ public class FloatWindowManager {
         showFloatWindow(mContext, floatWindowType);
     }
 
-    public synchronized void showFloatWindow(Context context, int floatWindowType) {
+    private synchronized void showFloatWindow(Context context, int floatWindowType) {
         if (context == null) {
             return;
         }
         float_window_type = floatWindowType;
         try {
             isFloatWindowShowing = true;
-            initFloatWindow(context);
+            floatViewParams = initFloatViewParams(context);
+            if (float_window_type == FW_TYPE_ROOT_VIEW) {
+                initCommonFloatView(context);
+            } else {
+                initSystemWindow(context);
+            }
+            isFloatWindowShowing = true;
         } catch (Exception e) {
             e.printStackTrace();
             isFloatWindowShowing = false;
         }
-    }
-
-    /**
-     * 初始化悬浮窗
-     */
-    private void initFloatWindow(final Context mContext) {
-        if (mContext == null) {
-            return;
-        }
-        floatViewParams = initFloatViewParams(mContext);
-        if (float_window_type == FW_TYPE_ROOT_VIEW) {
-            initCommonFloatView(mContext);
-        } else {
-            initSystemWindow(mContext);
-        }
-        isFloatWindowShowing = true;
     }
 
     /**
@@ -138,6 +128,10 @@ public class FloatWindowManager {
         wmParams.x = floatViewParams.x;
         wmParams.y = floatViewParams.y;
 
+        if (floatView instanceof View) {
+            windowManager.removeView((View) this.floatView);
+        }
+
         floatView = new FloatWindowView(mContext, floatViewParams, wmParams);
         //监听关闭悬浮窗
         floatView.setFloatViewListener(new FloatViewListener() {
@@ -162,7 +156,8 @@ public class FloatWindowManager {
             }
         });
         try {
-            windowManager.addView((View) floatView, wmParams);
+            final View floatView = (View) this.floatView;
+            windowManager.addView(floatView, wmParams);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,7 +197,7 @@ public class FloatWindowManager {
         int height = (int) (width * ratio);
 
         //如果上次的位置不为null，则用上次的位置
-        FloatViewParams lastParams = livePlayerWrapper.getLastParams();
+        FloatViewParams lastParams = lastWindowInfo.getLastParams();
         if (lastParams != null) {
             params.width = lastParams.width;
             params.height = lastParams.height;
@@ -254,13 +249,14 @@ public class FloatWindowManager {
      */
     public synchronized void dismissFloatWindow() {
         if (!isFloatWindowShowing) {
+            Log.d("dq", "dismissFloatWindow false");
             return;
         }
         try {
             isFloatWindowShowing = false;
             if (floatView != null) {
                 FloatViewParams floatViewParams = floatView.getParams();
-                livePlayerWrapper.setLastParams(floatViewParams);
+                lastWindowInfo.setLastParams(floatViewParams);
             }
             removeWindow();
 
