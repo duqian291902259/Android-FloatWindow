@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import site.duqian.floatwindow.BaseActivity;
+import site.duqian.floatwindow.fw_permission.RomUtils;
 import site.duqian.floatwindow.uitls.SystemUtils;
 
 /**
@@ -111,7 +113,15 @@ public class FloatWindowManager {
             //这个一定要activity running
             //wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;//TYPE_TOAST
             //TYPE_TOAST targetSDK必须小于26
-            wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT
+                    || (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && RomUtils.isMiui())) {
+                wmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                Toast.makeText(mContext, "not support,sdk>=26", Toast.LENGTH_SHORT).show();
+            } else {
+                wmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+            }
         } else if (float_window_type == FW_TYPE_ALERT_WINDOW) {
             //需要权限
             if (Build.VERSION.SDK_INT >= 26) {
