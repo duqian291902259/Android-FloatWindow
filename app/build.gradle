@@ -14,11 +14,11 @@ android {
         }
     }*/
 
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "site.duqian.floatwindow"
         minSdkVersion 18
-        targetSdkVersion 29 //如果targetSDKF大于25，第二个无需权限的demo无法显示，视情况选择实现方式
+        targetSdkVersion 30 //如果targetSDKF大于25，第二个无需权限的demo无法显示，视情况选择实现方式
         versionCode 1
         versionName "1.0"
         //vectorDrawables.useSupportLibrary = true
@@ -62,8 +62,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
 
     //申请悬浮窗权限
     //implementation 'com.linchaolong.android:floatingpermissioncompat:1.0'
