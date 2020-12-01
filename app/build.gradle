@@ -1,19 +1,18 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.didiglobal.booster'
-//这里是本人的签名配置，运行前请去掉
+/*
 Properties props = new Properties()
 props.load(new FileInputStream(file("../local.properties")))
+*/
 
 android {
-    signingConfigs {
+    /*signingConfigs {
         release {
             keyAlias props['KEY_ALIAS']
             keyPassword props['KEY_PASSWORD']
             storeFile file(props['KEYSTORE_FILE'])
             storePassword props['KEYSTORE_PASSWORD']
         }
-    }
-    //⤴️这里是本人的签名配置，运行前请去掉
+    }*/
 
     compileSdkVersion 29
     defaultConfig {
@@ -28,9 +27,9 @@ android {
     /*去掉我的的签名配置*/
     buildTypes {
         release {
-            minifyEnabled true
+            //minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled true
